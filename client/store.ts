@@ -10,6 +10,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     username: null, // Username of the logged in user
+    orderingFrom: null,  // name of Food Bank user is currently ordering from
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -28,6 +29,13 @@ const store = new Vuex.Store({
        * @param username - new username to set
        */
       state.username = username;
+    },
+    setOrderingFrom(state, orderingFrom) {
+      /**
+       * Update the stored orderingFrom to the specified one.
+       * @param orderingFrom
+       */
+      state.orderingFrom = orderingFrom;
     }
   },
   // Store data across page refreshes, only discard on browser close
