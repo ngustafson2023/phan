@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomePage from './components/Home/HomePage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
+import OrderPage from './components/Order/OrderPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
 import NotFound from './NotFound.vue';
 
@@ -10,6 +11,7 @@ Vue.use(VueRouter);
 const routes = [
   {path: '/', name: 'Home', component: HomePage},
   {path: '/account', name: 'Account', component: AccountPage},
+  {path: '/order', name: 'Order', component: OrderPage},
   {path: '/login', name: 'Login', component: LoginPage},
   {path: '*', name: 'Not Found', component: NotFound}
 ];
@@ -28,6 +30,11 @@ router.beforeEach((to, from, next) => {
 
     if (to.name === 'Account' && !router.app.$store.state.username) {
       next({name: 'Login'}); // Go to Login page if user navigates to Account and are not signed in
+      return;
+    }
+
+    if (to.name === 'Order' && !router.app.$store.state.orderingFrom) {
+      next({name: 'Home'}); // Go to home page if user navigates to Order without selecting food bank
       return;
     }
   }

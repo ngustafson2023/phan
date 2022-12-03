@@ -24,6 +24,7 @@ export default {
 
     // Clear alerts on page refresh
     this.$store.state.alerts = {};
+    this.$store.state.orderingFrom = 'Food Bank #1';  // to be removed
   }
 };
 </script>
