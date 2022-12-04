@@ -12,6 +12,10 @@ export type User = {
   username: string;
   password: string;
   isFoodBank: Boolean;
+  location: String;
+  visible: Boolean;
+  openHours: Date;
+  closingHours: Date;
   dateJoined: Date;
 };
 
@@ -31,6 +35,11 @@ const UserSchema = new Schema({
   },
 
   isFoodBank: { type: Boolean, default: false },
+
+  location: { type: String, required: false },
+  visible: { type: Boolean, required: false },
+  openHours: { type: Date, required: false },
+  closingHours: { type: Date, required: false },
   // The date the user joined
   dateJoined: {
     type: Date,
