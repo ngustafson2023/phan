@@ -36,12 +36,7 @@ export default {
     name: 'OrderPage',
     components: {},
     mounted() {
-        // GET food bank inventory
-        fetch(`/api/fooditem?name=${this.$store.state.orderingFrom}`, {
-            credentials: 'same-origin'
-        }).then(res => res.json()).then(res => {
-            //this.inventory = res.inventory;
-        })
+        this.refreshInventory();
     },
     data() {
         return {
@@ -83,10 +78,19 @@ export default {
                     const res = await r.json();
                     throw new Error(res.error);
                 }
+                this.refreshInventory();
             } catch (e) {
                 this.$set(this.alerts, e, 'error');
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
             }
+        },
+        async refreshInventory() {
+            // GET food bank inventory
+            fetch(`/api/fooditem?name=${this.$store.state.orderingFrom}`, {
+                credentials: 'same-origin'
+            }).then(res => res.json()).then(res => {
+                //this.inventory = res.inventory;
+            });
         }
     }
 };
