@@ -11,12 +11,9 @@ const router = express.Router();
 /**
  * Create a list orders by user
  *
- * @name GET /api/orders?username=username
+ * @name GET /api/order?username=username
  *
  * @return {Order} - The orders that user has placed
- * @throws {403} - If try to get all orders
- * @throws {409} - If username is already taken
- * @throws {400} - If password or username is not in correct format
  *
  */
 router.get(
@@ -39,8 +36,8 @@ router.get(
 
 /**
  * Create a new order
- * @name POST /api/orders
- * 
+ * @name POST /api/order
+ *
  * @param slotId
  * @param foodBankId
  * @param items 
@@ -50,11 +47,9 @@ router.post(
 	[
 	],
 	async (req: Request, res: Response) => {
-		console.log(req.body);
  		const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
 		const itemsArr = [];
 		for (const [name, quantity] of Object.entries(req.body.items)) {
-			console.log(`name ${name} quantity ${quantity}`);
 			 const foodItem = await FoodItemCollection.findOne(req.body.foodBankId, name);
 			// decrease quantity in foodItem
 			const newQuantity = parseInt(foodItem.quantity.toString()) - parseInt(quantity.toString()); // unsure about this

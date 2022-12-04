@@ -12,8 +12,10 @@ class FoodBankCollection {
 	 */
 	static async findFoodbanks(stockLevels: string[], restrictions: string[]): Promise<HydratedDocument<FoodBank>[]> {
 		const banks = await FoodBankModel.find({});
+		if (!stockLevels.length && !restrictions.length) {
+			return banks;
+		}
 		const filteredBanks = banks
-			.filter((b) => stockLevels.includes(getFoodbankStockLevel(b._id)))
 			.filter((b) => {
 				const bankRestrictions = getFoodbankRestrictions(b._id);
 				restrictions.forEach((restriction) => {
@@ -22,7 +24,8 @@ class FoodBankCollection {
 					}
 				});
 				return true;
-			});
+			})
+			.filter((b) => stockLevels.length == 0 || stockLevels.includes(getFoodbankStockLevel(b._id)));
 		return filteredBanks;
 	}
 

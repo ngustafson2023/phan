@@ -1,11 +1,7 @@
 <template>
-	<div>
+	<div class="container">
 		<section>
-			<header>
-				<h2>Browse Food Banks</h2>
-			</header>
-		</section>
-		<section>
+			<h2 class="no-padding">Browse Food Banks</h2>
 			<h3 class="no-padding">Filters</h3>
 			<div class="filters">
 				<div class="filter-section">
@@ -21,12 +17,7 @@
 		<section v-if="!foodbanks.length">None found</section>
 		<section v-else>
 			<h3 class="no-padding">Food Banks</h3>
-			<BookSlot v-for="foodbank in foodbanks" :key="foodbank" :foodbank="foodbank" />
-		</section>
-		<section class="alerts">
-			<article v-for="(status, alert, index) in alerts" :key="index" :class="status">
-				<p>{{ alert }}</p>
-			</article>
+			<BookSlot v-for="foodbank in foodbanks" :key="foodbank.name" :foodbank="foodbank" />
 		</section>
 	</div>
 </template>
@@ -68,16 +59,16 @@ export default {
 			// Nick add stuff here
 		},
 		editStockLevels(item, shouldInclude) {
-			if (shouldInclude && !stocks.includes(item)) {
+			if (shouldInclude && !this.stocks.includes(item)) {
 				this.stocks.push(item);
-			} else if (!shouldInclude && stocks.includes(item)) {
+			} else if (!shouldInclude && this.stocks.includes(item)) {
 				this.stocks = this.stocks.filter((s) => s !== item);
 			}
 		},
 		editRestrictions(item, shouldInclude) {
-			if (shouldInclude && !filters.includes(item)) {
+			if (shouldInclude && !this.filters.includes(item)) {
 				this.filters.push(item);
-			} else if (!shouldInclude && filters.includes(item)) {
+			} else if (!shouldInclude && this.filters.includes(item)) {
 				this.filters = this.filters.filter((s) => s !== item);
 			}
 		},
@@ -89,6 +80,10 @@ export default {
 section {
 	display: flex;
 	flex-direction: column;
+}
+
+.container {
+	margin-top: 20px;
 }
 
 header,
@@ -112,8 +107,15 @@ section .scrollbox {
 	background-color: lightgray;
 }
 
+.filter-section {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
+}
+
 .no-padding {
 	padding: 0px;
+	margin: 15px 0px 3px 0px;
 }
 
 .alerts {
@@ -125,23 +127,5 @@ section .scrollbox {
 	transform: translate(-50%, 10%);
 	width: 100%;
 	text-align: center;
-}
-
-.alerts article {
-	border-radius: 5px;
-	padding: 10px 20px;
-	color: #fff;
-}
-
-.alerts p {
-	margin: 0;
-}
-
-.alerts .error {
-	background-color: rgb(166, 23, 33);
-}
-
-.alerts .success {
-	background-color: rgb(45, 135, 87);
 }
 </style>

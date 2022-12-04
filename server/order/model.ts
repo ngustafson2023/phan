@@ -1,5 +1,7 @@
 import type { Types } from "mongoose";
 import { Schema, model } from "mongoose";
+import { Slot } from "../slot/model";
+import { User } from "../user/model";
 import type { FoodItem } from "../fooditem/model";
 
 // Type definition for Order on the backend
