@@ -5,6 +5,19 @@
                 <h2>Ordering from {{ $store.state.orderingFrom }}</h2>
             </header>
         </section>
+        <section>
+            <article v-for="(name, quantity) in inventory">
+                <p>{{name}}: {{quantity}}</p>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>My Cart</h2>
+            </header>
+            <article v-for="(name, quantity) in cart">
+                <p>{{name}}: {{quantity}}</p>
+            </article>
+        </section>
         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
                 <p>{{ alert }}</p>
@@ -24,13 +37,20 @@ export default {
             credentials: 'same-origin'
         }).then(res => res.json()).then(res => {
             console.log(res);
-            this.inventory = res.inventory;
+            //this.inventory = res.inventory;
         })
     },
     data() {
         return {
-            inventory: {},
-            cart: {},
+            //inventory: {},
+            inventory: {
+                'eggs': 20,
+                'donuts': 2
+            },
+            cart: {
+                'eggs': 20,
+                'donuts': 2
+            },
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
                 const message = 'Successfully placed order!';
