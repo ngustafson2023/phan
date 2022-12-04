@@ -2,11 +2,17 @@
 	<main>
 		<section>
 			<header>
-				<h2>Browse FoodBanks</h2>
+				<h2>{{ foobank.name }}</h2>
 			</header>
 		</section>
+		<div>
+			<h2>{{ foobank.name }}</h2>
+			<div>
+				<h5>Location: {{ foobank.name }}</h5>
+			</div>
+			<button @click="book">{{ "Place Order" }}</button>
+		</div>
 		<section v-if="!foodbanks.length">None found</section>
-		<
 		<section class="alerts">
 			<article v-for="(status, alert, index) in alerts" :key="index" :class="status">
 				<p>{{ alert }}</p>
@@ -17,8 +23,14 @@
 
 <script>
 export default {
-	name: "FindPage",
+	name: "BookSlot",
 	components: {},
+	props: {
+		foodbank: {
+			type: Object,
+			required: true,
+		},
+	},
 	beforeCreate() {
 		// GET food banks
 		fetch("/api/foodbank", {
@@ -35,32 +47,12 @@ export default {
 			});
 	},
 	data() {
-		return {
-			stocks: {},
-			filters: {},
-		};
+		return {};
 	},
 	methods: {
 		async book() {
-			// Nick add stuff here
-		},
-		updateSearch() {
-			/**
-			 * Updates freet to have the submitted draft content.
-			 */
-			// GET food banks
-			fetch("/api/foodbank", {
-				credentials: "same-origin",
-				params: {
-					stockLevels: this.stocks,
-					restrictions: this.filters,
-				},
-			})
-				.then((res) => res.json())
-				.then((res) => {
-					console.log(res);
-					this.foodbanks = res.foodbanks;
-				});
+			// Nick add stuff here and redirect
+			// this.foodbank._id should have the id
 		},
 	},
 };

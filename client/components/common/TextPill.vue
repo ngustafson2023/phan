@@ -10,6 +10,9 @@ export default {
 			type: String,
 			default: "",
 		},
+		callback: {
+			type: Function,
+		},
 	},
 	data() {
 		return { textInput: "", alerts: {} };

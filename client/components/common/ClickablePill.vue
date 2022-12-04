@@ -13,13 +13,17 @@ export default {
 			type: String,
 			default: "",
 		},
+		callback: {
+			type: Function,
+		},
 	},
 	data() {
-		return { value: False, alerts: {} };
+		return { value: false, alerts: {} };
 	},
 	methods: {
 		alternateValue() {
 			this.value = !this.value;
+			this.callback(title, this.value);
 		},
 	},
 };
