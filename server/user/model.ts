@@ -14,8 +14,8 @@ export type User = {
   isFoodBank: Boolean;
   location: String;
   visible: Boolean;
-  openHours: Date;
-  closingHours: Date;
+  opensAt: Date;
+  closesAt: Date;
   dateJoined: Date;
 };
 
@@ -38,8 +38,8 @@ const UserSchema = new Schema({
 
   location: { type: String, required: false },
   visible: { type: Boolean, required: false },
-  openHours: { type: Date, required: false },
-  closingHours: { type: Date, required: false },
+  opensAt: { type: Date, required: false },
+  closesAt: { type: Date, required: false },
   // The date the user joined
   dateJoined: {
     type: Date,
