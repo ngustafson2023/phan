@@ -16,6 +16,12 @@ class FoodBankCollection {
 			.filter((b) => stockLevels.includes(getFoodbankStockLevel(b._id)))
 			.filter((b) => {
 				const bankRestrictions = getFoodbankRestrictions(b._id);
+				restrictions.forEach((restriction) => {
+					if (!bankRestrictions.includes(restriction)) {
+						return false;
+					}
+				});
+				return true;
 			});
 		return filteredBanks;
 	}
@@ -27,7 +33,7 @@ class FoodBankCollection {
 	 * @return {Promise<HydratedDocument<FoodBank>> | Promise<null>} - The food bank with the given username, if any
 	 */
 	static async findOneByUsername(username: string): Promise<HydratedDocument<FoodBank>> {
-		return FoodBankModel.findOne({name: new RegExp(`^${username.trim()}$`, 'i')});
+		return FoodBankModel.findOne({ name: new RegExp(`^${username.trim()}$`, "i") });
 	}
 }
 

@@ -2,10 +2,13 @@
 
 <template>
 	<main>
-		<section v-if="$store.state.username">
+		<section v-if="this.$store.state.username">
 			<header>
-				<h2>Welcome back {{ $store.state.username }}</h2>
+				<h2>My Past Orders</h2>
 			</header>
+			<div v-if="!orders.length">No order to display</div>
+			<PastOrderComponent v-else v-for="order in orders" :key="order" :order="order" />
+			<FindPage />
 		</section>
 		<section v-else>
 			<header>
@@ -22,11 +25,16 @@
 </template>
 
 <script>
+import BookSlot from "@/components/Find/BookSlot.vue";
+import PastOrderComponent from "./PastOrder.vue";
+import FindPage from "@/components/Find/FindPage.vue";
+
 export default {
 	name: "HomePage",
+	components: { BookSlot, PastOrderComponent, FindPage },
 	beforeCreate() {
 		// GET orders a user has placed
-		fetch("/api/orders", {
+		fetch(`/api/orders?username=${this.$store.state.username}`, {
 			credentials: "same-origin",
 		})
 			.then((res) => res.json())
