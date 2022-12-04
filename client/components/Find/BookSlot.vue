@@ -1,24 +1,9 @@
 <template>
-	<main>
-		<section>
-			<header>
-				<h2>{{ foobank.name }}</h2>
-			</header>
-		</section>
-		<div>
-			<h2>{{ foobank.name }}</h2>
-			<div>
-				<h5>Location: {{ foobank.name }}</h5>
-			</div>
-			<button @click="book">{{ "Place Order" }}</button>
-		</div>
-		<section v-if="!foodbanks.length">None found</section>
-		<section class="alerts">
-			<article v-for="(status, alert, index) in alerts" :key="index" :class="status">
-				<p>{{ alert }}</p>
-			</article>
-		</section>
-	</main>
+	<div class="bank">
+		<h4 class="text">{{ foodbank.name }}</h4>
+		<h5 class="text">Location: {{ foodbank.address }}</h5>
+		<button @click="book">{{ "Place Order" }}</button>
+	</div>
 </template>
 
 <script>
@@ -30,21 +15,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-	},
-	beforeCreate() {
-		// GET food banks
-		fetch("/api/foodbank", {
-			credentials: "same-origin",
-			params: {
-				stockLevels: this.stocks,
-				restrictions: this.filters,
-			},
-		})
-			.then((res) => res.json())
-			.then((res) => {
-				console.log(res);
-				this.foodbanks = res.foodbanks;
-			});
 	},
 	data() {
 		return {};
@@ -64,6 +34,20 @@ section {
 	flex-direction: column;
 }
 
+.bank {
+	display: flex;
+	flex-direction: column;
+	background-color: lightgray;
+	padding: 20px;
+	margin-bottom: 20px;
+	border-radius: 20px;
+}
+
+.text {
+	padding: 0px 0px 10px 0px;
+	margin: 0px;
+}
+
 header,
 header > * {
 	display: flex;
@@ -75,6 +59,19 @@ section .scrollbox {
 	flex: 1 0 50vh;
 	padding: 3%;
 	overflow-y: scroll;
+}
+
+button {
+	padding: 10px;
+	border-radius: 10px;
+	background-color: lightgreen;
+	border-style: none;
+	font-family: inherit;
+	font-size: 16px;
+}
+
+button:hover {
+	cursor: pointer;
 }
 
 .alerts {
