@@ -17,7 +17,7 @@ const SlotSchema = new Schema({
   foodBankId: { type: Schema.Types.ObjectId, required: true, ref: "FoodBank" },
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },
-  quantity: { type: Number, required: true, min: 1 },
+  quantity: { type: Number, required: true, min: 0 },
 });
 
 const SlotModel = model<Slot>("Slot", SlotSchema);

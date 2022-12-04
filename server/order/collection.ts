@@ -39,6 +39,18 @@ class OrderCollection {
   }
 
   /**
+   * finds an order based on orderId
+   *
+   * @return {Promise<HydratedDocument<Order>>} - The order found
+   */
+  static async findOne(
+    _id: Types.ObjectId
+  ): Promise<HydratedDocument<Order>[]> {
+    const order = await OrderModel.find({ _id }).populate("User Slot FoodItem");
+    return order;
+  }
+
+  /**
    * finds all orders of a user
    *
    * @return {Promise<HydratedDocument<Order>[]>} - The orders of user

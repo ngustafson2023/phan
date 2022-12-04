@@ -18,14 +18,6 @@ const router = express.Router();
  * @throws {400} - If password or username is not in correct format
  *
  */
-router.post("/", async (req: Request, res: Response) => {
-	const stockLevels = req.body.stockLevels.split("|");
-	const restrictions = req.body.restrictions.split("|");
-	const banks = await FoodBankCollection.findFoodbanks(stockLevels, restrictions);
-	res.status(201).json({
-		message: `Here's food banks with your criteria`,
-		foodbanks: banks,
-	});
-});
+router.post("/", async (req: Request, res: Response) => {});
 
-export { router as userRouter };
+export { router as slotRouter };

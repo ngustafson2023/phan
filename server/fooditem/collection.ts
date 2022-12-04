@@ -10,7 +10,7 @@ class FoodItemCollection {
   static async addOne(
     foodBankId: Types.ObjectId,
     name: String,
-    quantity: 1,
+    quantity: Number,
     restrictions: []
   ): Promise<HydratedDocument<FoodItem>[]> {
     const foodItem = new FoodItemModel({
