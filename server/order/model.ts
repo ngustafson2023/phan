@@ -7,7 +7,11 @@ export type Order = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   userId: Types.ObjectId;
   slotId: Types.ObjectId;
-  items: [FoodItem];
+  // items: [FoodItem];
+  items: [{
+    foodItemId: Types.ObjectId;
+    quantity: Number;
+  }];
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -16,7 +20,8 @@ export type Order = {
 const OrderSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   slotId: { type: Schema.Types.ObjectId, required: true, ref: "Order" },
-  items: [{ type: Schema.Types.ObjectId, required: true, ref: "FoodItem" }],
+  // items: [{ type: Schema.Types.ObjectId, required: true, ref: "FoodItem" }], 
+  items: { type: [{foodItemId: Schema.Types.ObjectId, quantity: Number}], required: true }
 });
 
 const OrderModel = model<Order>("Order", OrderSchema);
