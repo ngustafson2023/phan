@@ -1,5 +1,5 @@
 import type {HydratedDocument} from 'mongoose';
-import type {FoodItem, PopulatedFoodItem} from './model';
+import type {FoodItem} from './model';
 
 type FoodItemResponse = {
     _id: string;
@@ -16,7 +16,7 @@ type FoodItemResponse = {
  * @returns {FoodItemResponse} - The foodItem object formatted for the frontend
  */
  const constructFoodItemResponse = (foodItem: HydratedDocument<FoodItem>): FoodItemResponse => {
-    const foodItemCopy: PopulatedFoodItem = {
+    const foodItemCopy: FoodItem = {
       ...foodItem.toObject({
         versionKey: false // Cosmetics; prevents returning of __v property
       })
