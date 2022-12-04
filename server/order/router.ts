@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import express from "express";
-import UserCollection from "server/user/collection";
+import UserCollection from "../user/collection";
 import OrderCollection from "./collection";
 import FoodBankCollection from "./collection";
 import * as util from "./util";

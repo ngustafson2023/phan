@@ -31,9 +31,10 @@
 export default {
     name: 'OrderPage',
     components: {},
-    beforeCreate() {
+    mounted() {
         // GET food bank inventory
-        fetch('/api/foodbank/inventory', {
+        console.log(this.$store.state.orderingFrom);
+        fetch(`/api/fooditem?${this.$store.state.orderingFrom}`, {
             credentials: 'same-origin'
         }).then(res => res.json()).then(res => {
             console.log(res);
