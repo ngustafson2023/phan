@@ -13,14 +13,10 @@ class SlotCollection {
 	 * @return {Promise<HydratedDocument<Slot>>} - The newly created slot
 	 */
 	static async addOne(foodBankId: string, startTime: Date, endTime: Date, quantity: Number): Promise<HydratedDocument<Slot>> {
-
 		const slot = new SlotModel({foodBankId, startTime, endTime, quantity});
 		await slot.save(); // Saves slot to MongoDB
 		return slot;
 	}
-
-
-
 
 
 	/**

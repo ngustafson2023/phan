@@ -1,44 +1,24 @@
+
 import type { Types } from "mongoose";
 import { Schema, model } from "mongoose";
 
-/**
- * This file defines the properties stored in a User
- * DO NOT implement operations here ---> use collection file
- */
-
-// Type definition for User on the backend
+// Type definition for Slot on the backend
 export type Slot = {
-	_id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-	foodBankId: Types.ObjectId;
-	startTime: Date;
-	endTime: Date;
-	quantity:number;
+  _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
+  foodBankId: string;
+  startTime: Date;
+  endTime: Date;
+  quantity: Number;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
-// Users stored in this table will have these fields, with the
+// Slots stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
 const SlotSchema = new Schema({
-	// The slot's associated foodbank's id
-	foodBankId: {
-		type: Schema.Types.ObjectId,
-		required: true,
-	},
-	// The slots's start time
-	startTime: {
-		type: Date,
-		required: true,
-	},
-	// The slots's end time
-	endTime: {
-		type: Date,
-		required: true,
-	},
-	// The slots's quantity/ capacity
-	quantity: {
-		type: Number,
-		required: true,
-	}
+  foodBankId: { type: Schema.Types.ObjectId, required: true, ref: "FoodBank" },
+  startTime: { type: Date, required: true },
+  endTime: { type: Date, required: true },
+  quantity: { type: Number, required: true, min: 1 },
 });
 
 const SlotModel = model<Slot>("Slot", SlotSchema);
