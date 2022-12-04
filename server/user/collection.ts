@@ -113,7 +113,7 @@ class UserCollection {
       }
 
       if (opensAt) {
-        user.opensAt = userDetails.opensAt;
+        user.opensAt = opensAt;
       }
 
       if (closesAt) {
