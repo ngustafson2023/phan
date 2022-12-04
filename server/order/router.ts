@@ -20,4 +20,4 @@ const router = express.Router();
  */
 router.post("/", async (req: Request, res: Response) => {});
 
-export { router as slotRouter };
+export { router as orderRouter };

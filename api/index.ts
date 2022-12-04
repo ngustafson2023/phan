@@ -8,6 +8,10 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import * as userValidator from '../server/user/middleware';
 import {userRouter} from '../server/user/router';
+import { foodBankRouter } from '../server/foodbank/router';
+import { foodItemRouter } from '../server/fooditem/router';
+import { orderRouter } from '../server/order/router';
+import { slotRouter } from '../server/slot/router';
 import MongoStore from 'connect-mongo';
 
 // Load environmental variables
@@ -68,6 +72,10 @@ app.use(userValidator.isCurrentSessionUserExists);
 
 // Add routers from routes folder
 app.use('/api/users', userRouter);
+app.use('/api/foodbanks', foodBankRouter);
+app.use('/api/fooditem', foodItemRouter);
+app.use('/api/slot', slotRouter);
+app.use('/api/order', orderRouter);
 
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {
