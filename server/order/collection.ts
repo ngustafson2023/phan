@@ -10,8 +10,8 @@ class OrderCollection {
    * @return {Promise<HydratedDocument<Order>>} - The order item created
    */
   static async addOne(
-    userId: Types.ObjectId,
-    slotId: Types.ObjectId,
+    userId: Types.ObjectId | string,
+    slotId: Types.ObjectId | string,
     items: [FoodItem]
   ): Promise<HydratedDocument<Order>> {
     const order = new OrderModel({

@@ -6,7 +6,10 @@
             </header>
         </section>
         <section>
-            <article v-for="(name, quantity) in inventory">
+            <header>
+                <h2>Inventory</h2>
+            </header>
+            <article v-for="(quantity, name) in inventory">
                 <p>{{name}}: {{quantity}}</p>
             </article>
         </section>
@@ -14,7 +17,7 @@
             <header>
                 <h2>My Cart</h2>
             </header>
-            <article v-for="(name, quantity) in cart">
+            <article v-for="(quantity, name) in cart">
                 <p>{{name}}: {{quantity}}</p>
             </article>
         </section>
@@ -33,17 +36,14 @@ export default {
     components: {},
     mounted() {
         // GET food bank inventory
-        console.log(this.$store.state.orderingFrom);
-        fetch(`/api/fooditem?${this.$store.state.orderingFrom}`, {
+        fetch(`/api/fooditem?name=${this.$store.state.orderingFrom}`, {
             credentials: 'same-origin'
         }).then(res => res.json()).then(res => {
-            console.log(res);
             //this.inventory = res.inventory;
         })
     },
     data() {
         return {
-            //inventory: {},
             inventory: {
                 'eggs': 20,
                 'donuts': 2
