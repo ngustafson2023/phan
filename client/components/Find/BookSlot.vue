@@ -5,7 +5,8 @@
 				<h2>Browse FoodBanks</h2>
 			</header>
 		</section>
-		<section></section>
+		<section v-if="!foodbanks.length">None found</section>
+		<
 		<section class="alerts">
 			<article v-for="(status, alert, index) in alerts" :key="index" :class="status">
 				<p>{{ alert }}</p>
@@ -42,6 +43,24 @@ export default {
 	methods: {
 		async book() {
 			// Nick add stuff here
+		},
+		updateSearch() {
+			/**
+			 * Updates freet to have the submitted draft content.
+			 */
+			// GET food banks
+			fetch("/api/foodbank", {
+				credentials: "same-origin",
+				params: {
+					stockLevels: this.stocks,
+					restrictions: this.filters,
+				},
+			})
+				.then((res) => res.json())
+				.then((res) => {
+					console.log(res);
+					this.foodbanks = res.foodbanks;
+				});
 		},
 	},
 };

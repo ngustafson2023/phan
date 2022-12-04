@@ -19,8 +19,8 @@ const router = express.Router();
  *
  */
 router.post("/", async (req: Request, res: Response) => {
-	const stockLevels = req.body.stockLevels.split("|");
-	const restrictions = req.body.restrictions.split("|");
+	const stockLevels = req.params.stockLevels.split(",");
+	const restrictions = req.params.restrictions.split(",");
 	const banks = await FoodBankCollection.findFoodbanks(stockLevels, restrictions);
 	res.status(201).json({
 		message: `Here's food banks with your criteria`,

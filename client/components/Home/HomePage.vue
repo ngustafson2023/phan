@@ -6,6 +6,8 @@
 			<header>
 				<h2>Welcome back {{ $store.state.username }}</h2>
 			</header>
+			<div v-if="!orders.length">No order to display</div>
+			<PastOrderComponent v-else v-for="order in orders" :key="order" :order="order" />
 		</section>
 		<section v-else>
 			<header>
@@ -26,7 +28,7 @@ export default {
 	name: "HomePage",
 	beforeCreate() {
 		// GET orders a user has placed
-		fetch("/api/orders", {
+		fetch(`/api/orders?username=${$store.state.username}`, {
 			credentials: "same-origin",
 		})
 			.then((res) => res.json())
