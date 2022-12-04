@@ -1,8 +1,8 @@
-import type { HydratedDocument } from "mongoose";
+import type { HydratedDocument, Types } from "mongoose";
 import moment from "moment";
 import type { FoodBank } from "./model";
 
-const getFoodbankStockLevel = (foodbankId: string) => {
+const getFoodbankStockLevel = (foodbankId: Types.ObjectId | string) => {
 	// Need to get all items, check their stock, and filter
 	// Less than 5 is low
 	// 5 to 20 is medium
@@ -10,7 +10,7 @@ const getFoodbankStockLevel = (foodbankId: string) => {
 	return "Medium";
 };
 
-const getFoodbankRestrictions = (foodbankId: string) => {
+const getFoodbankRestrictions = (foodbankId: Types.ObjectId | string) => {
 	// Need to get all items that are in stock, check what restrictions they meet, and concat
 	return ["Dairy Free", "Gluten Free", "Vegan"];
 };
