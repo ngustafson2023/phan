@@ -9,10 +9,11 @@ Vue.use(Vuex);
  */
 const store = new Vuex.Store({
   state: {
+    tags: ["Vegan", "Gluten Free", "Dairy Free"],
     username: null, // Username of the logged in user
-    orderingFrom: null,  // name of Food Bank user is currently ordering from
+    orderingFrom: null, // name of Food Bank user is currently ordering from
     orderingFromId: null,
-    alerts: {} // global success/error messages encountered during submissions to non-visible forms
+    alerts: {}, // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
     alert(state, payload) {
@@ -44,10 +45,10 @@ const store = new Vuex.Store({
        * @param orderingFromId
        */
       state.orderingFromId = orderingFromId;
-    }
+    },
   },
   // Store data across page refreshes, only discard on browser close
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState()],
 });
 
 export default store;
