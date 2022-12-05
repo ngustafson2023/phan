@@ -31,8 +31,8 @@ class FoodBankCollection {
       return banks;
     }
     const filteredBanks = banks
-      .filter((b) => {
-        const bankRestrictions = getFoodbankRestrictions(b._id);
+      .filter(async (b) => {
+        const bankRestrictions = await getFoodbankRestrictions(b._id);
         restrictions.forEach((restriction) => {
           if (!bankRestrictions.includes(restriction)) {
             return false;
@@ -41,9 +41,9 @@ class FoodBankCollection {
         return true;
       })
       .filter(
-        (b) =>
+        async (b) =>
           stockLevels.length == 0 ||
-          stockLevels.includes(getFoodbankStockLevel(b._id))
+          stockLevels.includes(await getFoodbankStockLevel(b._id))
       );
     return filteredBanks;
   }

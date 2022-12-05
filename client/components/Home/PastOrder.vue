@@ -4,9 +4,7 @@
 <template>
   <article class="order">
     <h2 class="topItem">{{ order.slotId.foodBankId.name }}</h2>
-    <h5 class="item">
-      Time: In {{ new Date(order.slotId.start) }} to {{ order.slotId.end }}
-    </h5>
+    <h5 class="item">Time: From {{ this.startTime }} to {{ this.endTime }}</h5>
     <h5 class="item">Location: {{ order.slotId.foodBankId.address }}</h5>
     <button>{{ "View Order" }}</button>
   </article>
@@ -21,6 +19,26 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  created() {
+    function formatAMPM(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      var strTime = hours + ":" + minutes + " " + ampm;
+      return strTime;
+    }
+    const start = new Date(this.order.slotId.startTime);
+    const end = new Date(this.order.slotId.endTime);
+    this.startTime = `${start.getMonth() + 1}/${start.getDate() + 1}/${
+      start.getFullYear() + 1
+    } at ${formatAMPM(end)}`;
+    this.endTime = `${end.getMonth() + 1}/${end.getDate() + 1}/${
+      end.getFullYear() + 1
+    } at ${formatAMPM(end)}`;
   },
   methods: {
     viewOrder() {
@@ -61,6 +79,7 @@ button:hover {
 }
 
 .topItem {
+  margin-top: 0px;
   margin-bottom: 5px;
 }
 
