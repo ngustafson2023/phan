@@ -24,7 +24,8 @@
           @input="field.value = $event.target.value"
         >
       </div>
-      
+    </article>
+
       <div
         key="date"
       >
