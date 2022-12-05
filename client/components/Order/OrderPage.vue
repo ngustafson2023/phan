@@ -26,8 +26,10 @@
             <header>
                 <h2>Slots</h2>
             </header>
+            <p v-if="slot">Currently selected: {{(new Date(slot.startTime)).toDateString()}} {{(new Date(slot.startTime)).toTimeString()}} to {{(new Date(slot.endTime)).toDateString()}} {{(new Date(slot.endTime)).toTimeString()}}</p>
+            <p v-else>Click on your desired slot below</p>
             <article v-for="slot in slots">
-                <p @click="assignSlot(slot._id)">{{slot.startTime}} to {{slot.endTime}}</p>
+                <p @click="assignSlot(slot._id, slot)">{{(new Date(slot.startTime)).toDateString()}} {{(new Date(slot.startTime)).toTimeString()}} to {{(new Date(slot.endTime)).toDateString()}} {{(new Date(slot.endTime)).toTimeString()}}</p>
             </article>
         </section>
         <section>
@@ -69,6 +71,7 @@ export default {
             inventory: {},
             cart: {},
             slotId: null,
+            slot: null,
             slots: [],
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
@@ -79,8 +82,9 @@ export default {
         }
     },
     methods: {
-        assignSlot(slotId) {
+        assignSlot(slotId, slot) {
             this.slotId = slotId;
+            this.slot = slot;
         },
         updateCart(name, quantity) {
             if (quantity === 0) return;
