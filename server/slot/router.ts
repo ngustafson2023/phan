@@ -1,23 +1,30 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import express from "express";
-import FoodBankCollection from "./collection";
+import SlotCollection from "./collection";
+import { Slot } from "./model";
 import * as util from "./util";
 
 const router = express.Router();
 
 /**
- * Create a list of footbanks
+ * Create a list of slots
  *
- * @name GET /api/foodbanks
+ * @name GET /api/slot?id=foodBankId
  *
- * @param {string} stockLevels - stock levels to include
- * @param {string} restrictions - restrictions to obey
- * @return {FoodBank} - The created user
- * @throws {403} - If there is a user already logged in
- * @throws {409} - If username is already taken
- * @throws {400} - If password or username is not in correct format
- *
+ * @param {string} foodBankId 
+ * @return {Slot}
  */
-router.post("/", async (req: Request, res: Response) => {});
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+    // Check if foodBankId query parameter was supplied
+		if (req.query.id !== undefined) {
+			next();
+			return;
+		}
+		res.status(403).json("Cannot get slots...");
+	},
+	async (req: Request, res: Response) => {
+		const slots = await SlotCollection.findAllByFoodBankId(req.query.id as string);
+		res.status(200).json(slots);
+	});
 
 export { router as slotRouter };

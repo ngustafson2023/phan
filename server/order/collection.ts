@@ -20,7 +20,7 @@ class OrderCollection {
       items,
     });
 
-    return (await order.save()).populate("User Slot FoodItem");
+    return (await order.save()).populate("userId slotId");
   }
 
   /**
@@ -33,7 +33,7 @@ class OrderCollection {
     slotId: Types.ObjectId
   ): Promise<HydratedDocument<Order>[]> {
     const order = await OrderModel.find({ userId, slotId }).populate(
-      "User Slot FoodItem"
+      "userId slotId"
     );
     return order;
   }
@@ -46,7 +46,7 @@ class OrderCollection {
   static async findOne(
     _id: Types.ObjectId
   ): Promise<HydratedDocument<Order>[]> {
-    const order = await OrderModel.find({ _id }).populate("User Slot FoodItem");
+    const order = await OrderModel.find({ _id }).populate("userId slotId");
     return order;
   }
 
@@ -59,7 +59,7 @@ class OrderCollection {
     userId: Types.ObjectId
   ): Promise<HydratedDocument<Order>[]> {
     const order = await OrderModel.find({ userId }).populate(
-      "User Slot FoodItem"
+      "userId slotId"
     );
     return order;
   }
@@ -84,7 +84,7 @@ class OrderCollection {
       order.items = items;
     }
 
-    return await order.save().populate("User Slot FoodItem");
+    return await order.save().populate("userId slotId");
   }
 
   /**

@@ -44,13 +44,11 @@ router.get(
  */
 router.post(
 	'/',
-	[
-	],
 	async (req: Request, res: Response) => {
  		const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
 		const itemsArr = [];
 		for (const [name, quantity] of Object.entries(req.body.items)) {
-			 const foodItem = await FoodItemCollection.findOne(req.body.foodBankId, name);
+			const foodItem = await FoodItemCollection.findOne(req.body.foodBankId, name);
 			// decrease quantity in foodItem
 			const newQuantity = parseInt(foodItem.quantity.toString()) - parseInt(quantity.toString()); // unsure about this
 			await FoodItemCollection.updateOneById(foodItem._id, foodItem.name, newQuantity);
@@ -61,6 +59,7 @@ router.post(
 			} 
 			itemsArr.push(item); 
 		}
+		console.log(itemsArr);
 		const order = await OrderCollection.addOne(userId, req.body.slotId, itemsArr);
 	
 		res.status(201).json({
