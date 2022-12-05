@@ -11,6 +11,7 @@
             </header>
             <article v-for="(quantity, name) in inventory">
                 <p>{{name}}: {{quantity}}</p>
+                <button @click="updateCart(name, quantity)">Add to Cart</button>
             </article>
         </section>
         <section>
@@ -44,10 +45,7 @@ export default {
                 'eggs': 20,
                 'donuts': 2
             },
-            cart: {
-                'eggs': 20,
-                'donuts': 2
-            },
+            cart: {},
             slotId: null,
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
@@ -58,6 +56,16 @@ export default {
         }
     },
     methods: {
+        updateCart(name, quantity) {
+            if (quantity === 0) return;
+
+            if (! this.cart.hasOwnProperty(name)) {
+                this.cart[name] = 1;
+            } else {
+                this.cart[name] = this.cart[name] + 1;
+            }
+            this.inventory[name] = this.inventory[name] - 1;
+        },
         async submit() {
             // POST order
             const options = {
