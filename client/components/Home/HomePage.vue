@@ -2,11 +2,6 @@
 
 <template>
   <main>
-    <div>
-      Food item:
-      <FoodItemComponent :foodItem="{}" /> end
-    </div>
-
     <section v-if="this.$store.state.username">
       <header>
         <h2>My Past Orders</h2>

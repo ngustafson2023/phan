@@ -14,12 +14,14 @@ class FoodItemCollection {
     restrictions: []
   ): Promise<HydratedDocument<FoodItem>[]> {
     const foodItem = new FoodItemModel({
-      foodBankId,
       name,
+      foodBankId,
       quantity,
       restrictions,
     });
-  
+
+    await foodItem.save();
+
     return foodItem.populate("foodBankId");
   }
 
@@ -32,7 +34,10 @@ class FoodItemCollection {
     foodBankId: Types.ObjectId,
     name: String
   ): Promise<HydratedDocument<FoodItem>> {
-    return await FoodItemModel.findOne({ foodBankId: foodBankId, name: name }).populate("foodBankId");
+    return await FoodItemModel.findOne({
+      foodBankId: foodBankId,
+      name: name,
+    }).populate("foodBankId");
   }
 
   /**
