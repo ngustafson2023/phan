@@ -4,7 +4,7 @@ import express from "express";
 import session from "express-session";
 import logger from "morgan";
 import http from "http";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import dotenv from "dotenv";
 import * as userValidator from "../server/user/middleware";
 import { userRouter } from "../server/user/router";
@@ -13,7 +13,7 @@ import { foodItemRouter } from "../server/fooditem/router";
 import { orderRouter } from "../server/order/router";
 import { slotRouter } from "../server/slot/router";
 import MongoStore from "connect-mongo";
-
+import SlotCollection from "../server/slot/collection";
 // Load environmental variables
 dotenv.config({});
 
@@ -78,6 +78,13 @@ app.use("/api/foodbanks", foodBankRouter);
 app.use("/api/fooditem", foodItemRouter);
 app.use("/api/slot", slotRouter);
 app.use("/api/order", orderRouter);
+
+SlotCollection.addOne(
+	new Types.ObjectId("638d1bbd295e35f6cdf3e760"),
+	new Date("2022-12-03"),
+	new Date("2022-12-04"),
+	7
+);
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {

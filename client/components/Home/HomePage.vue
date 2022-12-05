@@ -7,7 +7,7 @@
 				<h2>My Past Orders</h2>
 			</header>
 			<div v-if="!orders.length">No order to display</div>
-			<PastOrderComponent v-else v-for="order in orders" :key="order" :order="order" />
+			<PastOrderComponent v-else v-for="order in orders" :key="order._id" :order="order" />
 			<FindPage />
 		</section>
 		<section v-else>
@@ -39,7 +39,6 @@ export default {
 		})
 			.then((res) => res.json())
 			.then((res) => {
-				console.log(res);
 				this.orders = res;
 			});
 	},
