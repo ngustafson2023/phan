@@ -21,8 +21,16 @@
             <article v-for="(quantity, name) in cart">
                 <p>{{name}}: {{quantity}}</p>
             </article>
+        </section>
+        <section>
+            <header>
+                <h2>Slots</h2>
+            </header>
+        </section>
+        <section>
             <button @click="submit">Submit</button>
         </section>
+        
         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
                 <p>{{ alert }}</p>
@@ -67,6 +75,8 @@ export default {
             this.inventory[name] = this.inventory[name] - 1;
         },
         async submit() {
+            if (! slotId) return;
+
             // POST order
             const options = {
                 method: 'POST',

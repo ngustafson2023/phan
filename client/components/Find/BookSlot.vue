@@ -23,6 +23,9 @@ export default {
 		async book() {
 			// Nick add stuff here and redirect
 			// this.foodbank._id should have the id
+			console.log(this.$store.state.orderingFrom);
+			this.$store.commit('setOrderingFrom', this.foodbank.name);
+			this.$router.push('/order/');
 		},
 	},
 };
