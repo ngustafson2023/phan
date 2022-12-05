@@ -11,6 +11,7 @@
             </header>
             <article v-for="(quantity, name) in inventory">
                 <p>{{name}}: {{quantity}}</p>
+                <button @click="updateCart(name, quantity)">Add to Cart</button>
             </article>
         </section>
         <section>
@@ -20,8 +21,21 @@
             <article v-for="(quantity, name) in cart">
                 <p>{{name}}: {{quantity}}</p>
             </article>
+        </section>
+        <section>
+            <header>
+                <h2>Slots</h2>
+            </header>
+            <p v-if="slot">Currently selected: {{(new Date(slot.startTime)).toDateString()}} {{(new Date(slot.startTime)).toTimeString()}} to {{(new Date(slot.endTime)).toDateString()}} {{(new Date(slot.endTime)).toTimeString()}}</p>
+            <p v-else>Click on your desired slot below</p>
+            <article v-for="slot in slots">
+                <p @click="assignSlot(slot._id, slot)">{{(new Date(slot.startTime)).toDateString()}} {{(new Date(slot.startTime)).toTimeString()}} to {{(new Date(slot.endTime)).toDateString()}} {{(new Date(slot.endTime)).toTimeString()}}</p>
+            </article>
+        </section>
+        <section>
             <button @click="submit">Submit</button>
         </section>
+        
         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
                 <p>{{ alert }}</p>
@@ -37,18 +51,28 @@ export default {
     components: {},
     mounted() {
         this.refreshInventory();
+        
+        // GET slots
+        const options = {
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin' // Sends express-session credentials with request
+        };
+        try {
+            fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options).then(res => res.json()).then(res => {
+                this.slots = res;
+            });
+        } catch (e) {
+            this.$set(this.alerts, e, 'error');
+            setTimeout(() => this.$delete(this.alerts, e), 3000);
+        }
     },
     data() {
         return {
-            inventory: {
-                'eggs': 20,
-                'donuts': 2
-            },
-            cart: {
-                'eggs': 20,
-                'donuts': 2
-            },
+            inventory: {},
+            cart: {},
             slotId: null,
+            slot: null,
+            slots: [],
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
                 const message = 'Successfully placed order!';
@@ -58,7 +82,24 @@ export default {
         }
     },
     methods: {
+        assignSlot(slotId, slot) {
+            this.slotId = slotId;
+            this.slot = slot;
+        },
+        updateCart(name, quantity) {
+            if (quantity === 0) return;
+
+            if (! this.cart.hasOwnProperty(name)) {
+                this.cart[name] = 1;
+            } else {
+                this.cart[name] = this.cart[name] + 1;
+            }
+            this.inventory[name] = this.inventory[name] - 1;
+            this.$forceUpdate();
+        },
         async submit() {
+            if (! this.slotId) return;
+
             // POST order
             const options = {
                 method: 'POST',
@@ -78,7 +119,11 @@ export default {
                     const res = await r.json();
                     throw new Error(res.error);
                 }
-                this.refreshInventory();
+
+                this.$store.commit('setOrderingFrom', null);
+                this.$store.commit('setOrderingFromId', null);
+                this.$router.push('/')
+
             } catch (e) {
                 this.$set(this.alerts, e, 'error');
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
@@ -86,10 +131,13 @@ export default {
         },
         async refreshInventory() {
             // GET food bank inventory
-            fetch(`/api/fooditem?name=${this.$store.state.orderingFrom}`, {
+            fetch(`/api/fooditem?id=${this.$store.state.orderingFromId}`, {
                 credentials: 'same-origin'
             }).then(res => res.json()).then(res => {
-                //this.inventory = res.inventory;
+                for (const foodItem of res) {
+                    this.inventory[foodItem.name] = parseInt(foodItem.quantity);
+                }
+                this.$forceUpdate();
             });
         }
     }

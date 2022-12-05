@@ -4,7 +4,7 @@ import { Schema, model } from "mongoose";
 // Type definition for Slot on the backend
 export type Slot = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  foodBankId: string;
+  foodBankId: Types.ObjectId;
   startTime: Date;
   endTime: Date;
   quantity: Number;

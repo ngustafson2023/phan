@@ -36,8 +36,8 @@ class SlotCollection {
 			quantity,
 		});
 
-		return newSlot.populate("FoodBank");
-	}
+    return newSlot.populate("foodBankId");
+  }
 
 	/**
 	 * finds slot by Id
@@ -49,8 +49,12 @@ class SlotCollection {
 			_id: slotId,
 		});
 
-		return newSlot.populate("foodBankId");
-	}
+    return newSlot.populate("foodBankId");
+  }
+
+  static async findAllByFoodBankId(foodBankId: Types.ObjectId | string): Promise<Array<HydratedDocument<Slot>>> {
+    return SlotModel.find({foodBankId: foodBankId});
+  }
 
 	/**
 	 * updates slot by Id
@@ -77,8 +81,8 @@ class SlotCollection {
 			slot.quantity = quantity;
 		}
 
-		return await slot.save().populate("FoodBank");
-	}
+    return await slot.save().populate("foodBankId");
+  }
 
 	/**
 	 * delete slot based on filter

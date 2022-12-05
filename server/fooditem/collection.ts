@@ -19,7 +19,8 @@ class FoodItemCollection {
       quantity,
       restrictions,
     });
-    return (await foodItem.save()).populate("FoodBank");
+  
+    return foodItem.populate("foodBankId");
   }
 
   /**
@@ -31,7 +32,7 @@ class FoodItemCollection {
     foodBankId: Types.ObjectId,
     name: String
   ): Promise<HydratedDocument<FoodItem>> {
-    return await FoodItemModel.findOne({ foodBankId, name });
+    return await FoodItemModel.findOne({ foodBankId: foodBankId, name: name }).populate("foodBankId");
   }
 
   /**
@@ -42,7 +43,7 @@ class FoodItemCollection {
   static async findOneById(
     _id: Types.ObjectId
   ): Promise<HydratedDocument<FoodItem> | null> {
-    return await FoodItemModel.findOne({ _id });
+    return await FoodItemModel.findOne({ _id }).populate("foodBankId");
   }
 
   /**
@@ -51,9 +52,9 @@ class FoodItemCollection {
    * @return {Promise<HydratedDocument<FoodItem> > | Promise<null>} - the matching foodItems
    */
   static async findAllByFoodBank(
-    foodBankId: Types.ObjectId
+    foodBankId: Types.ObjectId | string
   ): Promise<HydratedDocument<FoodItem>[]> {
-    return await FoodItemModel.find({ foodBankId });
+    return await FoodItemModel.find({ foodBankId }).populate("foodBankId");
   }
 
   /**
@@ -62,7 +63,7 @@ class FoodItemCollection {
    * @return {Promise<HydratedDocument<FoodItem>[]> | Promise<null>} - all foodItems
    */
   static async findAll(): Promise<HydratedDocument<FoodItem>[]> {
-    return await FoodItemModel.find({});
+    return await FoodItemModel.find({}).populate("foodBankId");
   }
 
   /**
@@ -87,7 +88,7 @@ class FoodItemCollection {
     if (restrictions) {
       foodItem.restrictions = restrictions;
     }
-    return await foodItem.save().populate("User Slot FoodItem");
+    return (await foodItem.save()).populate("foodBankId");
   }
 
   /**
