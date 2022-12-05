@@ -25,6 +25,7 @@ const router = express.Router();
 	  });
 	}
   );
+  
 
 /**
  * Create a list of footbanks
