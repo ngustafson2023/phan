@@ -52,7 +52,7 @@ class FoodItemCollection {
    * @return {Promise<HydratedDocument<FoodItem> > | Promise<null>} - the matching foodItems
    */
   static async findAllByFoodBank(
-    foodBankId: Types.ObjectId
+    foodBankId: Types.ObjectId | string
   ): Promise<HydratedDocument<FoodItem>[]> {
     return await FoodItemModel.find({ foodBankId }).populate("foodBankId");
   }

@@ -9,16 +9,17 @@ const router = express.Router();
 
 /**
  * Get a list of items in a foodbank's inventory
- * @name GET /api/fooditem?name=foodbank
+ * @name GET /api/fooditem?id=foodbank
  */
 router.get(
   '/',
   [
-    foodBankValidator.isFoodBankExists
+    //foodBankValidator.isFoodBankExists
   ],
   async (req: Request, res: Response) => {
-  const foodBank = await FoodBankCollection.findOneByUsername(req.query.name as string);
-  const inventory = await FoodItemCollection.findAllByFoodBank(foodBank._id);
+  //const foodBank = await FoodBankCollection.findOneByUsername(req.query.name as string);
+  //const inventory = await FoodItemCollection.findAllByFoodBank(foodBank._id);
+  const inventory = await FoodItemCollection.findAllByFoodBank(req.query.id as string);
   const response = inventory.map(util.constructFoodItemResponse);
   res.status(200).json(response);
   }

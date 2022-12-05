@@ -66,10 +66,6 @@ export default {
     },
     data() {
         return {
-            /* inventory: {
-                'eggs': 20,
-                'donuts': 2
-            }, */
             inventory: {},
             cart: {},
             slotId: null,
@@ -95,6 +91,7 @@ export default {
                 this.cart[name] = this.cart[name] + 1;
             }
             this.inventory[name] = this.inventory[name] - 1;
+            this.$forceUpdate();
         },
         async submit() {
             if (! this.slotId) return;
@@ -118,11 +115,9 @@ export default {
                     const res = await r.json();
                     throw new Error(res.error);
                 }
-                this.refreshInventory();
-                console.log(this.$store.orderingFrom);
+
                 this.$store.commit('setOrderingFrom', null);
                 this.$store.commit('setOrderingFromId', null);
-                console.log(this.$store.orderingFrom);
                 this.$router.push('/')
 
             } catch (e) {
@@ -132,10 +127,13 @@ export default {
         },
         async refreshInventory() {
             // GET food bank inventory
-            fetch(`/api/fooditem?name=${this.$store.state.orderingFrom}`, {
+            fetch(`/api/fooditem?id=${this.$store.state.orderingFromId}`, {
                 credentials: 'same-origin'
             }).then(res => res.json()).then(res => {
-                this.inventory = res.inventory;
+                for (const foodItem of res) {
+                    this.inventory[foodItem.name] = parseInt(foodItem.quantity);
+                }
+                this.$forceUpdate();
             });
         }
     }
