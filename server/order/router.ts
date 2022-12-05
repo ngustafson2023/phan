@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import express from "express";
-import FoodItemCollection from "server/fooditem/collection";
+import FoodItemCollection from "../fooditem/collection";
 import UserCollection from "../user/collection";
 import OrderCollection from "./collection";
 import FoodBankCollection from "./collection";
@@ -40,24 +40,33 @@ router.get(
  *
  * @param slotId
  * @param foodBankId
- * @param items - {foodItemId : quantity}
+ * @param items 
  */
-/* router.post(
+router.post(
 	'/',
 	[
 	],
 	async (req: Request, res: Response) => {
-		const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+ 		const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
 		const itemsArr = [];
-		for (const [name, value] of Object.entries(req.body.items)) {
-			itemsArr.push(await FoodItemCollection.findOne(req.body.foodBankId, name));
+		for (const [name, quantity] of Object.entries(req.body.items)) {
+			 const foodItem = await FoodItemCollection.findOne(req.body.foodBankId, name);
+			// decrease quantity in foodItem
+			const newQuantity = parseInt(foodItem.quantity.toString()) - parseInt(quantity.toString()); // unsure about this
+			await FoodItemCollection.updateOneById(foodItem._id, foodItem.name, newQuantity);
+
+			const item = {
+				foodItemId: foodItem._id,
+				quantity: quantity
+			} 
+			itemsArr.push(item); 
 		}
 		const order = await OrderCollection.addOne(userId, req.body.slotId, itemsArr);
 	
 		res.status(201).json({
 		  message: 'Your order was created successfully.'
-		});
+		}); 
 	  }
-); */
+);
 
 export { router as orderRouter };

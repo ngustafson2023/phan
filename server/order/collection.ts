@@ -12,7 +12,7 @@ class OrderCollection {
 	static async addOne(
 		userId: Types.ObjectId | string,
 		slotId: Types.ObjectId | string,
-		items: [FoodItem]
+		items: Object
 	): Promise<HydratedDocument<Order>> {
 		const order = new OrderModel({
 			userId,
