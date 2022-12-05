@@ -40,7 +40,6 @@ export default {
 		})
 			.then((res) => res.json())
 			.then((res) => {
-				console.log(res);
 				this.foodbanks = res.foodbanks;
 			});
 	},
@@ -64,6 +63,7 @@ export default {
 			} else if (!shouldInclude && this.stocks.includes(item)) {
 				this.stocks = this.stocks.filter((s) => s !== item);
 			}
+			this.updateSlots();
 		},
 		editRestrictions(item, shouldInclude) {
 			if (shouldInclude && !this.filters.includes(item)) {
@@ -71,6 +71,17 @@ export default {
 			} else if (!shouldInclude && this.filters.includes(item)) {
 				this.filters = this.filters.filter((s) => s !== item);
 			}
+			this.updateSlots();
+		},
+		updateSlots() {
+			fetch(`/api/foodbanks?stockLevels=${this.stocks.join(",")}&restrictions=${this.filters.join(",")}`, {
+				credentials: "same-origin",
+			})
+				.then((res) => res.json())
+				.then((res) => {
+					this.foodbanks = res.foodbanks;
+					console.log(res);
+				});
 		},
 	},
 };

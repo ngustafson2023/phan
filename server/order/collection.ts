@@ -20,49 +20,46 @@ class OrderCollection {
 			items,
 		});
 
-    return (await order.save()).populate("userId slotId");
-  }
+		return (await order.save()).populate("userId slotId");
+	}
 
-  /**
-   * finds an order
-   *
-   * @return {Promise<HydratedDocument<Order>>} - The order based on userId and slotId
-   */
-  static async findOneByUserAndSlot(
-    userId: Types.ObjectId,
-    slotId: Types.ObjectId
-  ): Promise<HydratedDocument<Order>[]> {
-    const order = await OrderModel.find({ userId, slotId }).populate(
-      "userId slotId"
-    );
-    return order;
-  }
+	/**
+	 * finds an order
+	 *
+	 * @return {Promise<HydratedDocument<Order>>} - The order based on userId and slotId
+	 */
+	static async findOneByUserAndSlot(
+		userId: Types.ObjectId,
+		slotId: Types.ObjectId
+	): Promise<HydratedDocument<Order>[]> {
+		const order = await OrderModel.find({ userId, slotId }).populate("userId slotId");
+		return order;
+	}
 
-  /**
-   * finds an order based on orderId
-   *
-   * @return {Promise<HydratedDocument<Order>>} - The order found
-   */
-  static async findOne(
-    _id: Types.ObjectId
-  ): Promise<HydratedDocument<Order>[]> {
-    const order = await OrderModel.find({ _id }).populate("userId slotId");
-    return order;
-  }
+	/**
+	 * finds an order based on orderId
+	 *
+	 * @return {Promise<HydratedDocument<Order>>} - The order found
+	 */
+	static async findOne(_id: Types.ObjectId): Promise<HydratedDocument<Order>[]> {
+		const order = await OrderModel.find({ _id }).populate("userId slotId");
+		return order;
+	}
 
-  /**
-   * finds all orders of a user
-   *
-   * @return {Promise<HydratedDocument<Order>[]>} - The orders of user
-   */
-  static async findAllByUser(
-    userId: Types.ObjectId
-  ): Promise<HydratedDocument<Order>[]> {
-    const order = await OrderModel.find({ userId }).populate(
-      "userId slotId"
-    );
-    return order;
-  }
+	/**
+	 * finds all orders of a user
+	 *
+	 * @return {Promise<HydratedDocument<Order>[]>} - The orders of user
+	 */
+	static async findAllByUser(userId: Types.ObjectId): Promise<HydratedDocument<Order>[]> {
+		const order = await OrderModel.find({ userId })
+			.populate("userId slotId")
+			.populate({
+				path: "slotId",
+				populate: { path: "foodBankId", model: "FoodBank" },
+			});
+		return order;
+	}
 
 	/**
 	 * finds all orders of a user
@@ -84,8 +81,8 @@ class OrderCollection {
 			order.items = items;
 		}
 
-    return await order.save().populate("userId slotId");
-  }
+		return await order.save().populate("userId slotId");
+	}
 
 	/**
 	 * deletes based on the filter

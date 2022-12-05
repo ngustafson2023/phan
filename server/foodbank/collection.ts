@@ -10,9 +10,9 @@ class FoodBankCollection {
 	 * @param {string} foodBankId - The foodBankId of the foodbank to find
 	 * @return {Promise<HydratedDocument<FoodBank>> | Promise<null>} - The fb with the given id, if any
 	 */
-	 static async findFoodbankById(foodBankId:Types.ObjectId | string ): Promise<HydratedDocument<FoodBank>> {
-		return FoodBankModel.findOne({_id: foodBankId});
-	}	
+	static async findFoodbankById(foodBankId: Types.ObjectId | string): Promise<HydratedDocument<FoodBank>> {
+		return FoodBankModel.findOne({ _id: foodBankId });
+	}
 
 	/**
 	 * Find foodbanks with filters.
@@ -26,8 +26,8 @@ class FoodBankCollection {
 			return banks;
 		}
 		const filteredBanks = banks
-			.filter((b) => {
-				const bankRestrictions = getFoodbankRestrictions(b._id);
+			.filter(async (b) => {
+				const bankRestrictions = await getFoodbankRestrictions(b._id);
 				restrictions.forEach((restriction) => {
 					if (!bankRestrictions.includes(restriction)) {
 						return false;
@@ -35,7 +35,7 @@ class FoodBankCollection {
 				});
 				return true;
 			})
-			.filter((b) => stockLevels.length == 0 || stockLevels.includes(getFoodbankStockLevel(b._id)));
+			.filter(async (b) => stockLevels.length == 0 || stockLevels.includes(await getFoodbankStockLevel(b._id)));
 		return filteredBanks;
 	}
 
