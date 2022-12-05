@@ -14,7 +14,7 @@
       <router-link to="/">
         Home
       </router-link>
-      {{$store.state.isFoodBank}}
+      <!-- {{$store.state.isFoodBank}} -->
       <router-link
         v-if="$store.state.isFoodBank"
         to="/foodBankAccount" 
