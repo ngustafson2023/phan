@@ -8,8 +8,8 @@
         <h2>Food Bank Account for @{{ $store.state.username }}</h2>
       </header>
       <ul class="info">  
-        <li>Name: {{this.name}}</li>
-        <li>Address: {{this.address}}</li>
+        <li>Name: {{$store.state.username}}</li>
+        <li>Address: {{$store.state.address}}</li>
       </ul>
     </section>
 
@@ -37,15 +37,15 @@ export default {
     LogoutForm
   },
   beforeCreate(){
-    fetch("/api/foodBank/session", {
-			// credentials: "same-origin",
-		})
-			.then((res) => res.json())
-			.then((res) => {
-				console.log(res);
-				this.name = res.foodBank.name;
-        this.address = res.foodBank.address;
-			});
+    // fetch("/api/user/session", {
+		// 	// credentials: "same-origin",
+		// })
+		// 	.then((res) => res.json())
+		// 	.then((res) => {
+		// 		console.log(res);
+		// 		this.name = res.foodBank.name;
+    //     this.address = res.foodBank.address;
+		// 	});
   },
   data(){
     return {

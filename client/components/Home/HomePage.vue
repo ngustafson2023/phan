@@ -2,6 +2,9 @@
 
 <template>
 	<main>
+		<!-- <header>
+			{{$store.state.isFoodBank}}	
+		</header> -->
 		<section v-if="this.$store.state.username">
 			<header>
 				<h2>My Past Orders</h2>
@@ -41,8 +44,12 @@ export default {
 			.then((res) => res.json())
 			.then((res) => {
 				this.orders = res;
-			});
+			});			
+
+
 		}
+
+
 
 	},
 	data() {

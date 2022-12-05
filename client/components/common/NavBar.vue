@@ -14,12 +14,19 @@
       <router-link to="/">
         Home
       </router-link>
+      {{$store.state.isFoodBank}}
       <router-link
-        v-if="$store.state.username"
+        v-if="$store.state.isFoodBank"
+        to="/foodBankAccount" 
+      >
+        Food Bank Account
+      </router-link>
+      <router-link
+        v-else-if="$store.state.username"
         to="/account"
       >
-        Account
-      </router-link>
+      Account
+    </router-link>
       <router-link
         v-else
         to="/login"

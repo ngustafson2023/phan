@@ -5,6 +5,7 @@ import AccountPage from "./components/Account/AccountPage.vue";
 import OrderPage from "./components/Order/OrderPage.vue";
 import FindPage from "./components/Find/FindPage.vue";
 import LoginPage from "./components/Login/LoginPage.vue";
+import FoodBankAccountPage from "./components/FoodBankAccount/FoodBankAccountPage.vue";
 import NotFound from "./NotFound.vue";
 
 Vue.use(VueRouter);
@@ -15,7 +16,9 @@ const routes = [
 	{ path: "/order", name: "Order", component: OrderPage },
 	{ path: "/find", name: "Find", component: FindPage },
 	{ path: "/login", name: "Login", component: LoginPage },
+	{ path: "/foodBankAccount", name: "FoodBankAccount", component: FoodBankAccountPage },
 	{ path: "*", name: "Not Found", component: NotFound },
+
 ];
 
 const router = new VueRouter({ routes });
