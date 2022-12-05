@@ -34,13 +34,16 @@ export default {
 	components: { BookSlot, PastOrderComponent, FindPage },
 	beforeCreate() {
 		// GET orders a user has placed
-		fetch(`/api/order?username=${this.$store.state.username}`, {
+		if(this.$store.state.username !== null){ 
+			fetch(`/api/order?username=${this.$store.state.username}`, {
 			credentials: "same-origin",
-		})
+			})
 			.then((res) => res.json())
 			.then((res) => {
 				this.orders = res;
 			});
+		}
+
 	},
 	data() {
 		return {
