@@ -9,8 +9,9 @@ Vue.use(Vuex);
  */
 const store = new Vuex.Store({
   state: {
+    tags: ["Vegan", "Gluten Free", "Dairy Free"],
     username: null, // Username of the logged in user
-    orderingFrom: null,  // name of Food Bank user is currently ordering from
+    orderingFrom: null, // name of Food Bank user is currently ordering from
     orderingFromId: null,
     alerts: {}, // global success/error messages encountered during submissions to non-visible forms
     isFoodBank: false, //user is by default not a food bank
@@ -71,7 +72,7 @@ const store = new Vuex.Store({
     },
   },
   // Store data across page refreshes, only discard on browser close
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState()],
 });
 
 export default store;
