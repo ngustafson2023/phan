@@ -8,7 +8,7 @@ class SlotCollection {
 	 * @return {Promise<HydratedDocument<Slot>> } - slot added
 	 */
 	static async addOne(
-		foodBankId: Types.ObjectId,
+		foodBankId: Types.ObjectId | string,
 		startTime: Date,
 		endTime: Date,
 		quantity: Number

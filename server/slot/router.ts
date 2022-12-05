@@ -1,23 +1,39 @@
 import type { Request, Response } from "express";
 import express from "express";
+import SlotCollection from "./collection";
 import FoodBankCollection from "./collection";
 import * as util from "./util";
 
 const router = express.Router();
 
 /**
- * Create a list of footbanks
+ * Create a new slot.
  *
- * @name GET /api/foodbanks
+ * @name POST /api/slots
  *
- * @param {string} stockLevels - stock levels to include
- * @param {string} restrictions - restrictions to obey
- * @return {FoodBank} - The created user
- * @throws {403} - If there is a user already logged in
- * @throws {409} - If username is already taken
- * @throws {400} - If password or username is not in correct format
+ * @param {string} foodBankId
+ * @param {date} string
+ * @param {string} startTime 
+ * @param {string} endTime
+ * @param {number} quantity
+ * @return {slot} - The created slot
  *
  */
-router.post("/", async (req: Request, res: Response) => {});
+ router.post(
+    '/',
+    [
+    ],
+    async (req: Request, res: Response) => {
+      const foodBankId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+      const slot = await SlotCollection.addOne(foodBankId, req.body.startTime,req.body.endTime, req.body.quantity);
+        
+      res.status(201).json({
+        message: 'Your freet was created successfully.',
+        slot: slot
+      });
+    }
+  );
+
+
 
 export { router as slotRouter };

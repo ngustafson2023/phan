@@ -12,7 +12,7 @@
         <li>Address: {{$store.state.address}}</li>
       </ul>
     </section>
-
+    <AddSlotPage />
     <section>
       <header>
         <h3>Account management</h3>
@@ -28,13 +28,16 @@ import ChangeUsernameForm from '@/components/Account/ChangeUsernameForm.vue';
 import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
 import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
 import LogoutForm from '@/components/Account/LogoutForm.vue';
+import AddSlotPage from '@/components/FoodBankAccount/AddSlotPage.vue';
+
 export default {
   name: 'FoodBankAccountPage',
   components: {
     ChangeUsernameForm,
     ChangePasswordForm,
     DeleteAccountForm,
-    LogoutForm
+    LogoutForm,
+    AddSlotPage
   },
   beforeCreate(){
     // fetch("/api/user/session", {

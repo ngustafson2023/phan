@@ -38,7 +38,6 @@
 import BookSlot from "@/components/Find/BookSlot.vue";
 import PastOrderComponent from "./PastOrder.vue";
 import FindPage from "@/components/Find/FindPage.vue";
-
 import FoodItemComponent from "@/components/FoodItem/SingleFoodItem.vue";
 
 export default {
