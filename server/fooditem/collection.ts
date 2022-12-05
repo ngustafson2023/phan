@@ -30,8 +30,8 @@ class FoodItemCollection {
   static async findOne(
     foodBankId: Types.ObjectId,
     name: String
-  ): Promise<HydratedDocument<FoodItem>[]> {
-    return await FoodItemModel.find({ foodBankId, name });
+  ): Promise<HydratedDocument<FoodItem>> {
+    return await FoodItemModel.findOne({ foodBankId, name });
   }
 
   /**

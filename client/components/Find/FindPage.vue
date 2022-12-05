@@ -1,72 +1,75 @@
 <template>
-	<main>
+	<div class="container">
 		<section>
-			<header>
-				<h2>Finding from {{ $store.state.FindingFrom }}</h2>
-			</header>
+			<h2 class="no-padding">Browse Food Banks</h2>
+			<h3 class="no-padding">Filters</h3>
+			<div class="filters">
+				<div class="filter-section">
+					<h4 class="no-padding">Stock Levels:</h4>
+					<ClickablePill v-for="sl in STOCK_LEVELS" :title="sl" :callback="editStockLevels" />
+				</div>
+				<div class="filter-section">
+					<h4 class="no-padding">Dietary Restrictions:</h4>
+					<ClickablePill v-for="r in RESTRICTIONS" :title="r" :callback="editRestrictions" />
+				</div>
+			</div>
 		</section>
-		<section class="alerts">
-			<article v-for="(status, alert, index) in alerts" :key="index" :class="status">
-				<p>{{ alert }}</p>
-			</article>
+		<section v-if="!foodbanks.length">None found</section>
+		<section v-else>
+			<h3 class="no-padding">Food Banks</h3>
+			<BookSlot v-for="foodbank in foodbanks" :key="foodbank.name" :foodbank="foodbank" />
 		</section>
-	</main>
+	</div>
 </template>
-
 <script>
+import BookSlot from "@/components/Find/BookSlot.vue";
+import ClickablePill from "@/components/common/ClickablePill.vue";
+import TextPill from "@/components/common/TextPill.vue";
+
 export default {
 	name: "FindPage",
-	components: {},
+	components: { BookSlot, ClickablePill, TextPill },
 	beforeCreate() {
-		// GET food bank inventory
-		fetch("/api/foodbank/inventory", {
+		// GET food banks
+		fetch("/api/foodbanks", {
 			credentials: "same-origin",
+			params: {
+				stockLevels: this.stocks,
+				restrictions: this.filters,
+			},
 		})
 			.then((res) => res.json())
 			.then((res) => {
 				console.log(res);
-				this.inventory = res.inventory;
+				this.foodbanks = res.foodbanks;
 			});
 	},
 	data() {
 		return {
-			stocks: {},
-			filters: {},
+			foodbanks: [],
+			stocks: [],
+			filters: [],
+			aterts: {},
+			STOCK_LEVELS: ["Low", "Medium", "High"],
+			RESTRICTIONS: ["Vegan", "Gluten Free", "Dairy Free"],
 		};
 	},
 	methods: {
-		async submit() {
-			// PUSH Find
-			const options = {
-				method: "PUSH",
-				headers: { "Content-Type": "application/json" },
-				credentials: "same-origin", // Sends express-session credentials with request
-			};
-			const fieldsMap = [["cart", this.cart]];
-			options.body = JSON.stringify(Object.fromEntries(fieldsMap));
-			try {
-				const r = await fetch("/api/Find", options);
-				if (!r.ok) {
-					const res = await r.json();
-					throw new Error(res.error);
-				}
-			} catch (e) {
-				this.$set(this.alerts, e, "error");
-				setTimeout(() => this.$delete(this.alerts, e), 3000);
+		async book() {
+			// Nick add stuff here
+		},
+		editStockLevels(item, shouldInclude) {
+			if (shouldInclude && !this.stocks.includes(item)) {
+				this.stocks.push(item);
+			} else if (!shouldInclude && this.stocks.includes(item)) {
+				this.stocks = this.stocks.filter((s) => s !== item);
 			}
-
-			// PUT new food bank inventory
-			options.method = "PUT";
-			try {
-				const r = await fetch("/api/foodbank", options);
-				if (!r.ok) {
-					const res = await r.json();
-					throw new Error(res.error);
-				}
-				this.callback();
-			} catch (e) {
-				this.$set(this.alerts, e, "error");
-				setTimeout(() => this.$delete(this.alerts, e), 3000);
+		},
+		editRestrictions(item, shouldInclude) {
+			if (shouldInclude && !this.filters.includes(item)) {
+				this.filters.push(item);
+			} else if (!shouldInclude && this.filters.includes(item)) {
+				this.filters = this.filters.filter((s) => s !== item);
 			}
 		},
 	},
@@ -77,6 +80,10 @@ export default {
 section {
 	display: flex;
 	flex-direction: column;
+}
+
+.container {
+	margin-top: 20px;
 }
 
 header,
@@ -92,6 +99,25 @@ section .scrollbox {
 	overflow-y: scroll;
 }
 
+.filters {
+	flex-direction: column;
+	display: flex;
+	padding: 20px;
+	border-radius: 20px;
+	background-color: whitesmoke;
+}
+
+.filter-section {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
+}
+
+.no-padding {
+	padding: 0px;
+	margin: 15px 0px 3px 0px;
+}
+
 .alerts {
 	position: absolute;
 	z-index: 99;
@@ -101,23 +127,5 @@ section .scrollbox {
 	transform: translate(-50%, 10%);
 	width: 100%;
 	text-align: center;
-}
-
-.alerts article {
-	border-radius: 5px;
-	padding: 10px 20px;
-	color: #fff;
-}
-
-.alerts p {
-	margin: 0;
-}
-
-.alerts .error {
-	background-color: rgb(166, 23, 33);
-}
-
-.alerts .success {
-	background-color: rgb(45, 135, 87);
 }
 </style>

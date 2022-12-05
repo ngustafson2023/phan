@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import createPersistedState from 'vuex-persistedstate';
+import Vue from "vue";
+import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
@@ -11,6 +11,7 @@ const store = new Vuex.Store({
   state: {
     username: null, // Username of the logged in user
     orderingFrom: null,  // name of Food Bank user is currently ordering from
+    orderingFromId: null,
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -36,6 +37,13 @@ const store = new Vuex.Store({
        * @param orderingFrom
        */
       state.orderingFrom = orderingFrom;
+    },
+    setOrderingFromId(state, orderingFromId) {
+      /**
+       * Update the stored orderingFromId to the specified one.
+       * @param orderingFromId
+       */
+      state.orderingFromId = orderingFromId;
     }
   },
   // Store data across page refreshes, only discard on browser close

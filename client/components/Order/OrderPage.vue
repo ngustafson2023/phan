@@ -5,6 +5,23 @@
                 <h2>Ordering from {{ $store.state.orderingFrom }}</h2>
             </header>
         </section>
+        <section>
+            <header>
+                <h2>Inventory</h2>
+            </header>
+            <article v-for="(quantity, name) in inventory">
+                <p>{{name}}: {{quantity}}</p>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>My Cart</h2>
+            </header>
+            <article v-for="(quantity, name) in cart">
+                <p>{{name}}: {{quantity}}</p>
+            </article>
+            <button @click="submit">Submit</button>
+        </section>
         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
                 <p>{{ alert }}</p>
@@ -18,19 +35,20 @@
 export default {
     name: 'OrderPage',
     components: {},
-    beforeCreate() {
-        // GET food bank inventory
-        fetch('/api/foodbank/inventory', {
-            credentials: 'same-origin'
-        }).then(res => res.json()).then(res => {
-            console.log(res);
-            this.inventory = res.inventory;
-        })
+    mounted() {
+        this.refreshInventory();
     },
     data() {
         return {
-            inventory: {},
-            cart: {},
+            inventory: {
+                'eggs': 20,
+                'donuts': 2
+            },
+            cart: {
+                'eggs': 20,
+                'donuts': 2
+            },
+            slotId: null,
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
                 const message = 'Successfully placed order!';
@@ -41,38 +59,38 @@ export default {
     },
     methods: {
         async submit() {
-            // PUSH order
+            // POST order
             const options = {
-                method: 'PUSH',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'same-origin' // Sends express-session credentials with request
             };
-            const fieldsMap = [['cart', this.cart]];
+            const fieldsMap = [
+                ['items', this.cart],
+                ['slotId', this.slotId],
+                ['foodBankId', this.$store.state.orderingFromId]
+            ];
             options.body = JSON.stringify(Object.fromEntries(fieldsMap));
+
             try {
                 const r = await fetch('/api/order', options);
                 if (!r.ok) {
                     const res = await r.json();
                     throw new Error(res.error);
                 }
+                this.refreshInventory();
             } catch (e) {
                 this.$set(this.alerts, e, 'error');
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
             }
-
-            // PUT new food bank inventory
-            options.method = 'PUT';
-            try {
-                const r = await fetch('/api/foodbank', options);
-                if (!r.ok) {
-                    const res = await r.json();
-                    throw new Error(res.error);
-                }
-                this.callback();
-            } catch (e) {
-                this.$set(this.alerts, e, 'error');
-                setTimeout(() => this.$delete(this.alerts, e), 3000);
-            }
+        },
+        async refreshInventory() {
+            // GET food bank inventory
+            fetch(`/api/fooditem?name=${this.$store.state.orderingFrom}`, {
+                credentials: 'same-origin'
+            }).then(res => res.json()).then(res => {
+                //this.inventory = res.inventory;
+            });
         }
     }
 };
