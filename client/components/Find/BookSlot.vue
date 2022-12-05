@@ -40,7 +40,7 @@ section {
 .bank {
 	display: flex;
 	flex-direction: column;
-	background-color: lightgray;
+	background-color: whitesmoke;
 	padding: 20px;
 	margin-bottom: 20px;
 	border-radius: 20px;

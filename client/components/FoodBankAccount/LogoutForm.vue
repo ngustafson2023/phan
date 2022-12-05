@@ -20,7 +20,6 @@ export default {
           message: 'You are now signed out!', status: 'success'
         });
         this.$store.commit('setFoodBankFlag',false);
-
       }
     };
   }

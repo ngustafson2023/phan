@@ -3,12 +3,9 @@
 
 <template>
 	<article class="order">
-		<header>
-			<input v-if="editing" class="editArea" :value="draftName" @input="draftName = $order.target.value" />
-			<h2 class="topItem" v-else>{{ order.slot.foodbank.name }}</h2>
-		</header>
-		<h5 class="item">Time: In {{ order.slot.start }} to {{ order.slot.end }}</h5>
-		<h5 class="item">Location: {{ order.slot.foodbank.location }}</h5>
+		<h2 class="topItem">{{ order.slotId.foodBankId.name }}</h2>
+		<h5 class="item">Time: In {{ new Date(order.slotId.start) }} to {{ order.slotId.end }}</h5>
+		<h5 class="item">Location: {{ order.slotId.foodBankId.address }}</h5>
 		<button>{{ "View Order" }}</button>
 	</article>
 </template>
@@ -40,6 +37,21 @@ export default {
 	border-radius: 15px;
 	background-color: whitesmoke;
 	border-style: none;
+	display: flex;
+	flex-direction: column;
+}
+
+button {
+	padding: 10px;
+	border-radius: 10px;
+	background-color: lightgreen;
+	border-style: none;
+	font-family: inherit;
+	font-size: 16px;
+}
+
+button:hover {
+	cursor: pointer;
 }
 
 .item {

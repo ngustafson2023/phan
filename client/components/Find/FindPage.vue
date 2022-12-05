@@ -104,7 +104,7 @@ section .scrollbox {
 	display: flex;
 	padding: 20px;
 	border-radius: 20px;
-	background-color: lightgray;
+	background-color: whitesmoke;
 }
 
 .filter-section {

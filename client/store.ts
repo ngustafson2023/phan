@@ -9,10 +9,14 @@ Vue.use(Vuex);
  */
 const store = new Vuex.Store({
   state: {
+    tags: ["Vegan", "Gluten Free", "Dairy Free"],
     username: null, // Username of the logged in user
-    orderingFrom: null,  // name of Food Bank user is currently ordering from
+    orderingFrom: null, // name of Food Bank user is currently ordering from
     orderingFromId: null,
-    alerts: {} // global success/error messages encountered during submissions to non-visible forms
+    alerts: {}, // global success/error messages encountered during submissions to non-visible forms
+    isFoodBank: false, //user is by default not a food bank
+    name:"",
+    address:""
   },
   mutations: {
     alert(state, payload) {
@@ -44,10 +48,31 @@ const store = new Vuex.Store({
        * @param orderingFromId
        */
       state.orderingFromId = orderingFromId;
-    }
+    },
+    setFoodBankFlag(state, isFoodBank) {
+      /**
+       * Update the stored isFoodBank flag to the specified one.
+       * @param isFoodBank - new Foodbank flag to set
+       */
+      state.isFoodBank = isFoodBank;
+    },
+    setName(state, name) {
+      /**
+       * Update the stored name to the specified one.
+       * @param name - new name to set
+       */
+      state.name = name;
+    },
+    setAddress(state, address) {
+      /**
+       * Update the stored address to the specified one.
+       * @param address - new address to set
+       */
+      state.address = address;
+    },
   },
   // Store data across page refreshes, only discard on browser close
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState()],
 });
 
 export default store;

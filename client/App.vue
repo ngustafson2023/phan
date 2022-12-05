@@ -20,6 +20,11 @@ export default {
     }).then(res => res.json()).then(res => {
       const user = res.user;
       this.$store.commit('setUsername', user ? user.username : null);
+      if(user){
+        // this.$store.commit('setName', user.name);
+        this.$store.commit('setAddress',user.location)
+        this.$store.commit('setFoodBankFlag',user.isFoodBank);
+      }
     });
 
     // Clear alerts on page refresh
