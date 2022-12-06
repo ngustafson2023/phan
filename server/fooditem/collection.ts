@@ -21,7 +21,6 @@ class FoodItemCollection {
     });
 
     await foodItem.save();
-
     return foodItem.populate("foodBankId");
   }
 

@@ -5,20 +5,19 @@
 <template>
   <nav>
     <div class="left">
-      <!-- <img src="../../public/logo.svg"> -->
-      <h1 class="title">Phan</h1>
+      <router-link class="title" to="/">Phan</router-link>
     </div>
-    <div class="right">
+    <div class="right" v-if="$store.state.user.isFoodBank">
+      <p to="/signout">thank you for your contribution</p>
+    </div>
+    <section class="right" v-else>
       <router-link to="/"> Home </router-link>
-      <!-- {{$store.state.isFoodBank}} -->
-      <router-link v-if="$store.state.isFoodBank" to="/foodBankAccount">
-        Food Bank Account
-      </router-link>
-      <router-link v-else-if="$store.state.username" to="/account">
+      <router-link v-if="$store.state.user.username" to="/account">
         Account
       </router-link>
       <router-link v-else to="/login"> Login </router-link>
-    </div>
+    </section>
+
     <section class="alerts">
       <article
         v-for="(status, alert, index) in $store.state.alerts"

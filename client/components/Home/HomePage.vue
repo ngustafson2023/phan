@@ -2,7 +2,12 @@
 
 <template>
   <main>
-    <section v-if="this.$store.state.username">
+    <!-- regular user -->
+    <section
+      v-if="
+        this.$store.state.user.username && !this.$store.state.user.isFoodBank
+      "
+    >
       <header>
         <h2>My Past Orders</h2>
       </header>
@@ -15,6 +20,13 @@
       />
       <FindPage />
     </section>
+    <section
+      v-else-if="
+        this.$store.state.user.name && this.$store.state.user.isFoodBank
+      "
+    >
+      <FoodBankHome />
+    </section>
     <section v-else>
       <header>
         <h2>Welcome to Phan!</h2>
@@ -22,7 +34,6 @@
       <article>
         <h3>
           <router-link to="/login"> Sign in </router-link>
-          .
         </h3>
       </article>
     </section>
@@ -34,14 +45,15 @@ import BookSlot from "@/components/Find/BookSlot.vue";
 import PastOrderComponent from "./PastOrder.vue";
 import FindPage from "@/components/Find/FindPage.vue";
 import FoodItemComponent from "@/components/FoodItem/SingleFoodItem.vue";
+import FoodBankHome from "@/components/FoodBank/FoodBankHome.vue";
 
 export default {
   name: "HomePage",
-  components: { BookSlot, PastOrderComponent, FindPage },
+  components: { BookSlot, PastOrderComponent, FindPage, FoodBankHome },
   beforeCreate() {
     // GET orders a user has placed
-    if (this.$store.state.username !== null) {
-      fetch(`/api/order?username=${this.$store.state.username}`, {
+    if (this.$store.state.user.username && !this.$store.state.user.isFoodBank) {
+      fetch(`/api/order?username=${this.$store.state.user.username}`, {
         credentials: "same-origin",
       })
         .then((res) => res.json())
@@ -52,7 +64,7 @@ export default {
   },
   data() {
     return {
-      orders: {},
+      orders: [],
       alerts: {}, // Displays success/error messages encountered during form submission
     };
   },

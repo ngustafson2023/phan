@@ -5,7 +5,7 @@
   <main>
     <section>
       <header>
-        <h2>Food Bank Account for @{{ $store.state.username }}</h2>
+        <h2>Food Bank Account for @{{ $store.state.user.username }}</h2>
       </header>
       <ul class="info">
         <li>Name: {{ $store.state.user.name }}</li>
@@ -15,9 +15,10 @@
         <li>date joined: {{ $store.state.user.dateJoined }}</li>
       </ul>
     </section>
+    Current Slots:
+    {{ slots }}
 
-    <h2>Add New Pickup Slots</h2>
-      <AddSlotPage />
+    <AddSlotPage :slots="slots" />
     <h2>Update Inventory</h2>
     <div v-for="foodItem of inventory">
       <FoodItemComponent :foodItem="foodItem" />
@@ -48,41 +49,42 @@
 
       <button v-on:click="submit">submit</button>
     </form>
-    <section>
-      <header>
-        <h3>Account management</h3>
-      </header>
-      <LogoutForm />
-      <DeleteAccountForm />
-    </section>
+
+    <LogoutForm />
   </main>
 </template>
 
-
+<script>
 import DeleteAccountForm from "@/components/Account/DeleteAccountForm.vue";
 import LogoutForm from "@/components/Account/LogoutForm.vue";
 import FoodItemComponent from "@/components/FoodItem/SingleFoodItem.vue";
 import ClickablePill from "@/components/common/ClickablePill.vue";
-import AddSlotPage from '@/components/FoodBankAccount/AddSlotPage.vue';
-
+import AddSlotPage from "@/components/FoodBank/AddSlotPage.vue";
 
 export default {
-  name: "FoodBankAccountPage",
+  name: "FoodBankHome",
   components: {
     DeleteAccountForm,
     LogoutForm,
-    AddSlotPage
+    AddSlotPage,
     FoodItemComponent,
     ClickablePill,
   },
   beforeCreate() {
-    fetch(`/api/fooditem?id=${this.$store.state.userId}`, {
+    fetch(`/api/fooditem?id=${this.$store.state.user._id}`, {
       // credentials: "same-origin",
     })
       .then((res) => res.json())
       .then((res) => {
         console.log(res);
         this.inventory = res;
+      });
+    fetch(`/api/slots?id=${this.$store.state.user._id}`, {
+      // credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        this.slots = res.slots;
       });
   },
   data() {
@@ -91,6 +93,7 @@ export default {
       name: "",
       quantity: null,
       restrictions: [],
+      slots: [],
       addingItem: false,
     };
   },
