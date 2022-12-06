@@ -18,7 +18,7 @@
       <h2 class="topItem">{{ foodItem.name }}</h2>
     </header>
     <div>
-      <label name="name"># name</label>
+      <label name="name">name</label>
       <input v-model="foodItemName" :placeholder="foodItem.name" type="text" />
     </div>
     <div>

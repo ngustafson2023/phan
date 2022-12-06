@@ -10,7 +10,7 @@
                 <h2>Inventory</h2>
             </header>
             <article v-for="(quantity, name) in inventory">
-                <p>{{name}}: {{quantity}}</p>
+                <p>{{ name }}: {{ quantity }}</p>
                 <button @click="updateCart(name, quantity)">Add to Cart</button>
             </article>
         </section>
@@ -19,23 +19,24 @@
                 <h2>My Cart</h2>
             </header>
             <article v-for="(quantity, name) in cart">
-                <p>{{name}}: {{quantity}}</p>
+                <p>{{ name }}: {{ quantity }}</p>
             </article>
         </section>
         <section>
             <header>
                 <h2>Slots</h2>
             </header>
-            <p v-if="slot">Currently selected: {{formatDate(slot.startTime)}} to {{formatDate(slot.endTime)}}</p>
+            <p v-if="slot">Currently selected: {{ formatDate(slot.startTime) }} to {{ formatDate(slot.endTime) }}</p>
             <p v-else>Click on your desired slot below</p>
             <article v-for="slot in slots">
-                <p @click="assignSlot(slot._id, slot)">{{formatDate(slot.startTime)}} to {{formatDate(slot.endTime)}}</p>
+                <p @click="assignSlot(slot._id, slot)">{{ formatDate(slot.startTime) }} to {{ formatDate(slot.endTime) }}
+                </p>
             </article>
         </section>
         <section>
             <button @click="submit">Submit</button>
         </section>
-        
+
         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
                 <p>{{ alert }}</p>
@@ -45,24 +46,27 @@
 </template>
 
 <script>
+import TextPill from "@/components/common/TextPill.vue";
 
 export default {
-    name: 'OrderPage',
+    name: "OrderPage",
     components: {},
     mounted() {
         this.refreshInventory();
-        
+
         // GET slots
         const options = {
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'same-origin' // Sends express-session credentials with request
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin", // Sends express-session credentials with request
         };
         try {
-            fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options).then(res => res.json()).then(res => {
-                this.slots = res;
-            });
+            fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options)
+                .then((res) => res.json())
+                .then((res) => {
+                    this.slots = res;
+                });
         } catch (e) {
-            this.$set(this.alerts, e, 'error');
+            this.$set(this.alerts, e, "error");
             setTimeout(() => this.$delete(this.alerts, e), 3000);
         }
     },
@@ -75,11 +79,11 @@ export default {
             slots: [],
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
-                const message = 'Successfully placed order!';
-                this.$set(this.alerts, message, 'success');
+                const message = "Successfully placed order!";
+                this.$set(this.alerts, message, "success");
                 setTimeout(() => this.$delete(this.alerts, message), 3000);
-            }
-        }
+            },
+        };
     },
     methods: {
         assignSlot(slotId, slot) {
@@ -89,7 +93,7 @@ export default {
         updateCart(name, quantity) {
             if (quantity === 0) return;
 
-            if (! this.cart.hasOwnProperty(name)) {
+            if (!this.cart.hasOwnProperty(name)) {
                 this.cart[name] = 1;
             } else {
                 this.cart[name] = this.cart[name] + 1;
@@ -98,7 +102,7 @@ export default {
             this.$forceUpdate();
         },
         async submit() {
-            if (! this.slotId) return;
+            if (!this.slotId) return;
 
             // POST order
             const options = {
@@ -146,17 +150,16 @@ export default {
         },
         formatTime(date) {
             var hours = date.getHours();
-			var minutes = date.getMinutes();
-			var ampm = hours >= 12 ? "PM" : "AM";
-			hours = hours % 12;
-			hours = hours ? hours : 12; // the hour '0' should be '12'
-			minutes = minutes < 10 ? "0" + minutes : minutes;
-			var strTime = hours + ":" + minutes + " " + ampm;
-			return strTime;
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? "PM" : "AM";
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            var strTime = hours + ":" + minutes + " " + ampm;
+            return strTime;
         }
     }
 };
-
 </script>
 
 <style scoped>

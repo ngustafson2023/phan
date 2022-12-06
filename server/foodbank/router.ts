@@ -5,27 +5,20 @@ import * as util from "./util";
 
 const router = express.Router();
 
-
-
 /**
  * Get the signed in foodBank
- * 
+ *
  * @name GET /api/foodBank/session
  *
  * @return - currently logged in foodbank, or null if not logged in
  */
- router.get(
-	'/session',
-	[],
-	async (req: Request, res: Response) => {
-	  const foodBank = await FoodBankCollection.findFoodbankById(req.session.userId);
-	  res.status(200).json({
-		message: 'Your session info was found successfully.',
-		foodBank: foodBank ? foodBank : null
-	  });
-	}
-  );
-  
+router.get("/session", [], async (req: Request, res: Response) => {
+	const foodBank = await FoodBankCollection.findFoodbankById(req.session.userId);
+	res.status(200).json({
+		message: "Your session info was found successfully.",
+		foodBank: foodBank ? foodBank : null,
+	});
+});
 
 /**
  * Create a list of footbanks

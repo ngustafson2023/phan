@@ -78,6 +78,7 @@ app.use("/api/foodbanks", foodBankRouter);
 app.use("/api/fooditem", foodItemRouter);
 app.use("/api/slot", slotRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/slots", slotRouter);
 
 SlotCollection.addOne(
 	new Types.ObjectId("638d1bbd295e35f6cdf3e760"),

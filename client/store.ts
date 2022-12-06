@@ -10,13 +10,15 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     tags: ["Vegan", "Gluten Free", "Dairy Free"],
-    username: null, // Username of the logged in user
+    user: {},
+    // username: null, // Username of the logged in user
+    // userId: null,
     orderingFrom: null, // name of Food Bank user is currently ordering from
     orderingFromId: null,
     alerts: {}, // global success/error messages encountered during submissions to non-visible forms
-    isFoodBank: false, //user is by default not a food bank
-    name:"",
-    address:""
+    // isFoodBank: false, //user is by default not a food bank
+    name: "",
+    address: "",
   },
   mutations: {
     alert(state, payload) {
@@ -28,13 +30,13 @@ const store = new Vuex.Store({
         Vue.delete(state.alerts, payload.message);
       }, 3000);
     },
-    setUsername(state, username) {
-      /**
-       * Update the stored username to the specified one.
-       * @param username - new username to set
-       */
-      state.username = username;
-    },
+    // setUsername(state, username) {
+    //   /**
+    //    * Update the stored username to the specified one.
+    //    * @param username - new username to set
+    //    */
+    //   state.username = username;
+    // },
     setOrderingFrom(state, orderingFrom) {
       /**
        * Update the stored orderingFrom to the specified one.
@@ -49,13 +51,13 @@ const store = new Vuex.Store({
        */
       state.orderingFromId = orderingFromId;
     },
-    setFoodBankFlag(state, isFoodBank) {
-      /**
-       * Update the stored isFoodBank flag to the specified one.
-       * @param isFoodBank - new Foodbank flag to set
-       */
-      state.isFoodBank = isFoodBank;
-    },
+    // setFoodBankFlag(state, isFoodBank) {
+    //   /**
+    //    * Update the stored isFoodBank flag to the specified one.
+    //    * @param isFoodBank - new Foodbank flag to set
+    //    */
+    //   state.isFoodBank = isFoodBank;
+    // },
     setName(state, name) {
       /**
        * Update the stored name to the specified one.
@@ -69,6 +71,21 @@ const store = new Vuex.Store({
        * @param address - new address to set
        */
       state.address = address;
+    },
+    // setUserId(state, userId) {
+    //   /**
+    //    * Update the stored usreId to the specified one.
+    //    * @param userId - new userId to set
+    //    */
+    //   state.userId = userId;
+    // },
+
+    setUser(state, user) {
+      /**
+       * Update the stored usreId to the specified one.
+       * @param user - new user to set
+       */
+      state.user = user;
     },
   },
   // Store data across page refreshes, only discard on browser close

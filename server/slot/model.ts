@@ -14,7 +14,7 @@ export type Slot = {
 // Slots stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
 const SlotSchema = new Schema({
-  foodBankId: { type: Schema.Types.ObjectId, required: true, ref: "FoodBank" },
+  foodBankId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },
   quantity: { type: Number, required: true, min: 0 },
