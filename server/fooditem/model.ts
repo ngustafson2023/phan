@@ -14,9 +14,9 @@ export type FoodItem = {
 // FoodItems stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
 const FoodItemSchema = new Schema({
-  foodBankId: { type: Schema.Types.ObjectId, required: true, ref: "FoodBank" },
+  foodBankId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   name: { type: String, required: true },
-  quantity: { type: Number, required: true, min: 1 },
+  quantity: { type: Number, required: true },
   restrictions: [{ type: String, required: false }],
 });
 

@@ -7,12 +7,47 @@
       <header>
         <h2>Food Bank Account for @{{ $store.state.username }}</h2>
       </header>
-      <ul class="info">  
-        <li>Name: {{$store.state.username}}</li>
-        <li>Address: {{$store.state.address}}</li>
+      <ul class="info">
+        <li>Name: {{ $store.state.user.name }}</li>
+        <li>Address: {{ $store.state.user.location }}</li>
+        <li>opensAt: {{ $store.state.user.opensAt || "N/A" }}</li>
+        <li>closesAt: {{ $store.state.user.closesAt || "N/A" }}</li>
+        <li>date joined: {{ $store.state.user.dateJoined }}</li>
       </ul>
     </section>
-    <AddSlotPage />
+
+    <h2>Add New Pickup Slots</h2>
+      <AddSlotPage />
+    <h2>Update Inventory</h2>
+    <div v-for="foodItem of inventory">
+      <FoodItemComponent :foodItem="foodItem" />
+    </div>
+    <div v-if="!inventory.length">no inventory</div>
+
+    <button v-on:click="addingItem = !addingItem">Add Inventory Item</button>
+
+    <form v-show="addingItem">
+      <div>
+        name: <input v-model="name" type="text" :placeholder="'name'" />
+      </div>
+
+      <div>
+        quantity:
+        <input v-model="quantity" type="number" :placeholder="'1'" min="0" />
+      </div>
+
+      <div>
+        <label id="restrictions" name="restrictions" />
+        tags:
+        <ClickablePill
+          v-for="tag in $store.state.tags"
+          :title="tag"
+          :callback="toggleTag"
+        />
+      </div>
+
+      <button v-on:click="submit">submit</button>
+    </form>
     <section>
       <header>
         <h3>Account management</h3>
@@ -23,38 +58,93 @@
   </main>
 </template>
 
-<script>
-import ChangeUsernameForm from '@/components/Account/ChangeUsernameForm.vue';
-import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
-import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
-import LogoutForm from '@/components/Account/LogoutForm.vue';
+
+import DeleteAccountForm from "@/components/Account/DeleteAccountForm.vue";
+import LogoutForm from "@/components/Account/LogoutForm.vue";
+import FoodItemComponent from "@/components/FoodItem/SingleFoodItem.vue";
+import ClickablePill from "@/components/common/ClickablePill.vue";
 import AddSlotPage from '@/components/FoodBankAccount/AddSlotPage.vue';
 
+
 export default {
-  name: 'FoodBankAccountPage',
+  name: "FoodBankAccountPage",
   components: {
-    ChangeUsernameForm,
-    ChangePasswordForm,
     DeleteAccountForm,
     LogoutForm,
     AddSlotPage
+    FoodItemComponent,
+    ClickablePill,
   },
-  beforeCreate(){
-    // fetch("/api/user/session", {
-		// 	// credentials: "same-origin",
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((res) => {
-		// 		console.log(res);
-		// 		this.name = res.foodBank.name;
-    //     this.address = res.foodBank.address;
-		// 	});
+  beforeCreate() {
+    fetch(`/api/fooditem?id=${this.$store.state.userId}`, {
+      // credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        this.inventory = res;
+      });
   },
-  data(){
+  data() {
     return {
-      name:"",
-      address:""
-    }
-  }
+      inventory: [],
+      name: "",
+      quantity: null,
+      restrictions: [],
+      addingItem: false,
+    };
+  },
+
+  methods: {
+    async submit() {
+      this.restrictions.sort();
+
+      // update food item
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin", // Sends express-session credentials with request
+      };
+      const fieldsMap = [
+        ["quantity", this.quantity],
+        ["restrictions", this.restrictions],
+        ["foodBankId", this.$store.state.user._id],
+        ["name", this.name],
+      ];
+      options.body = JSON.stringify(Object.fromEntries(fieldsMap));
+      console.log("body", options.body);
+      try {
+        const r = await fetch("/api/foodItem", options);
+        console.log(r);
+        if (!r.ok) {
+          const res = await r.json();
+          throw new Error(res.error);
+        }
+        console.log(res);
+        this.inventory.push(res);
+
+        // reset
+        this.quantity = null;
+        this.restrictions = [];
+        this.name = "";
+        this.addingItem = false;
+      } catch (e) {
+        this.$set(this.alerts, e, "error");
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+
+    toggleTag(tag) {
+      const tags = new Set(this.restrictions);
+      if (tags.has(tag)) {
+        tags.delete(tag);
+      } else {
+        tags.add(tag);
+      }
+
+      this.restrictions = [...tags];
+      console.log("tags updated to", this.restrictions);
+    },
+  },
 };
 </script>
