@@ -13,13 +13,9 @@ const router = express.Router();
  * @name GET /api/fooditem?id=foodbank
  */
 router.get("/", async (req: Request, res: Response) => {
-  //const foodBank = await FoodBankCollection.findOneByUsername(req.query.name as string);
-  //const inventory = await FoodItemCollection.findAllByFoodBank(foodBank._id);
-
   const inventory = await FoodItemCollection.findAllByFoodBank(
     req.query.id as string
   );
-  console.log(inventory);
   const response = inventory.map(util.constructFoodItemResponse);
   res.status(200).json(response);
 });
@@ -33,7 +29,7 @@ router.post(
   [foodItemValidator.isValidFoodItemModifier],
   async (req: Request, res: Response) => {
     const { foodBankId, name, quantity, restrictions } = req.body;
-    console.log("body back", foodBankId, name, quantity, restrictions);
+    //console.log("body back", foodBankId, name, quantity, restrictions);
     const foodItem = await FoodItemCollection.addOne(
       foodBankId,
       name,

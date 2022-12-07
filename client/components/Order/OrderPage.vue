@@ -28,8 +28,8 @@
             </header>
             <p v-if="slot">Currently selected: {{ formatDate(slot.startTime) }} to {{ formatDate(slot.endTime) }}</p>
             <p v-else>Click on your desired slot below</p>
-            <article v-for="slot in slots">
-                <p @click="assignSlot(slot._id, slot)">{{ formatDate(slot.startTime) }} to {{ formatDate(slot.endTime) }}
+            <article v-for="slotObj in slots">
+                <p @click="assignSlot(slotObj._id, slotObj)">{{ formatDate(slotObj.startTime) }} to {{ formatDate(slotObj.endTime) }}
                 </p>
             </article>
         </section>
@@ -63,7 +63,10 @@ export default {
             fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options)
                 .then((res) => res.json())
                 .then((res) => {
-                    this.slots = res;
+                    for (const slotObj of res.slots) {
+                        this.slots.push(slotObj);
+                    } 
+                    this.$forceUpdate();
                 });
         } catch (e) {
             this.$set(this.alerts, e, "error");

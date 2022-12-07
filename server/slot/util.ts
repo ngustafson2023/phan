@@ -26,7 +26,7 @@ const constructSlotItemResponse = (
     }),
   };
 
-  console.log(foodItem);
+
   return {
     ...slotCopy,
     _id: slotCopy._id.toString(),

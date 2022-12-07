@@ -106,7 +106,7 @@ export default {
       }
 
       this.tagsToUpdate = [...tags];
-      console.log("tags updated to", this.tagsToUpdate);
+      //console.log("tags updated to", this.tagsToUpdate);
     },
   },
 };

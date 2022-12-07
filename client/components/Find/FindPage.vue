@@ -80,7 +80,6 @@ export default {
 				.then((res) => res.json())
 				.then((res) => {
 					this.foodbanks = res.foodbanks;
-					console.log(res);
 				});
 		},
 	},

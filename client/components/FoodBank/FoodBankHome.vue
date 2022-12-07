@@ -76,7 +76,7 @@ export default {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         this.inventory = res;
       });
     fetch(`/api/slots?id=${this.$store.state.user._id}`, {
@@ -115,15 +115,15 @@ export default {
         ["name", this.name],
       ];
       options.body = JSON.stringify(Object.fromEntries(fieldsMap));
-      console.log("body", options.body);
+      //console.log("body", options.body);
       try {
         const r = await fetch("/api/foodItem", options);
-        console.log(r);
+        //console.log(r);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
         }
-        console.log(res);
+        //console.log(res);
         this.inventory.push(res);
 
         // reset
@@ -146,7 +146,7 @@ export default {
       }
 
       this.restrictions = [...tags];
-      console.log("tags updated to", this.restrictions);
+      //console.log("tags updated to", this.restrictions);
     },
   },
 };

@@ -80,7 +80,7 @@ export default {
       try {
         const r = await fetch("/api/slots/", options);
         this.slots.push((await r.json()).slot);
-        console.log("response", await r.json());
+        //console.log("response", await r.json());
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);

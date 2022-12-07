@@ -59,7 +59,7 @@ router.post(
 			} 
 			itemsArr.push(item); 
 		}
-		console.log(itemsArr);
+
 		const order = await OrderCollection.addOne(userId, req.body.slotId, itemsArr);
 	
 		res.status(201).json({

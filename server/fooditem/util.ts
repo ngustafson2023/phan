@@ -24,7 +24,6 @@ const constructFoodItemResponse = (
     }),
   };
 
-  console.log(foodItem);
   return {
     ...foodItemCopy,
     _id: foodItemCopy._id.toString(),
