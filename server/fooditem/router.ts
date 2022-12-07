@@ -15,10 +15,11 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   //const foodBank = await FoodBankCollection.findOneByUsername(req.query.name as string);
   //const inventory = await FoodItemCollection.findAllByFoodBank(foodBank._id);
-  console.log(req.query.id);
+
   const inventory = await FoodItemCollection.findAllByFoodBank(
     req.query.id as string
   );
+  console.log(inventory);
   const response = inventory.map(util.constructFoodItemResponse);
   res.status(200).json(response);
 });
