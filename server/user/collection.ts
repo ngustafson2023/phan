@@ -68,6 +68,15 @@ class UserCollection {
       password,
     });
   }
+  /**
+   * Find a user by userId.
+   *
+   * @param {string} userId - The userId of the user to find
+   * @return {Promise<HydratedDocument<User>> | Promise<null>} - The user with the given username, if any
+   */
+  static async findAllFoodBanks(): Promise<HydratedDocument<User>[]> {
+    return UserModel.find({ isFoodBank: true });
+  }
 
   /**
    * Update user's information
