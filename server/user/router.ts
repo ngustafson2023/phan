@@ -23,6 +23,30 @@ router.get("/session", [], async (req: Request, res: Response) => {
   });
 });
 
+/** * Get users with the foodbanks flag
+ * TODO: may need better route and documentation
+ * (so students don't accidentally delete this when copying over)
+ *
+ * @name GET /api/users?isFoodBank=true
+ *
+ * @return - foodbanks
+ */
+router.get("/", [], async (req: Request, res: Response) => {
+  const { isFoodbank } = req.query;
+
+  console.log("q string", req.query);
+  if (isFoodbank === "true") {
+    const foodBanks = await UserCollection.findAllFoodBanks();
+    console.log("banks", foodBanks.map(util.constructUserResponse));
+    return res.status(200).json({
+      message: "food banks found successfully.",
+      foodBanks: foodBanks.map(util.constructUserResponse),
+    });
+  }
+
+  return; // only need to find food banks
+});
+
 /**
  * Sign in user.
  *
