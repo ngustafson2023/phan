@@ -9,10 +9,13 @@
             <header>
                 <h2>Inventory</h2>
             </header>
-            <article v-for="(quantity, name) in inventory">
+            <!-- <article v-for="(quantity, name) in inventory">
                 <p>{{ name }}: {{ quantity }}</p>
                 <button @click="updateCart(name, quantity)">Add to Cart</button>
-            </article>
+            </article> -->
+            <div v-for="(quantity, name) in inventory">
+                <InventoryItem v-bind:name="name" v-bind:quantity="quantity" @updateCart="updateCart"></InventoryItem>
+            </div>
         </section>
         <section>
             <header>
@@ -47,10 +50,11 @@
 
 <script>
 import TextPill from "@/components/common/TextPill.vue";
+import InventoryItem from "@/components/Order/InventoryItem.vue";
 
 export default {
     name: "OrderPage",
-    components: {},
+    components: { InventoryItem },
     mounted() {
         this.refreshInventory();
 
