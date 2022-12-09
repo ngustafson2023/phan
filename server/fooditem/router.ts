@@ -15,7 +15,15 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   //const foodBank = await FoodBankCollection.findOneByUsername(req.query.name as string);
   //const inventory = await FoodItemCollection.findAllByFoodBank(foodBank._id);
-  console.log(req.query.id);
+  if (!req.query.id) {
+    const foodItems = await FoodItemCollection.findAll();
+
+    return res.status(200).json({
+      message: "got all foodbanks",
+      foodItems: foodItems.map(util.constructFoodItemResponse),
+    });
+  }
+
   const inventory = await FoodItemCollection.findAllByFoodBank(
     req.query.id as string
   );

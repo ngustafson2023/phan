@@ -76,7 +76,7 @@ export default {
       fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options)
         .then((res) => res.json())
         .then((res) => {
-          this.slots = res;
+          this.slots = res.slots;
         });
     } catch (e) {
       this.$set(this.alerts, e, "error");
