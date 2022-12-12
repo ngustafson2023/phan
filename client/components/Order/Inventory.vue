@@ -1,24 +1,30 @@
 <template>
     <div class="container">
         <h2 class="title">Ordering from {{ $store.state.orderingFrom }}</h2>
-        <div v-for="(quantity, name) in inventory" class="item">
-            <div class="desc">
-                <h3 class="name">{{ name }}</h3>
-                <p class="quantity"><b>Quantity Available:</b> {{ quantity }}</p>
-            </div>
-            <div class="controls">
-                <button @click="decrNumSelected(name)" class="modifier">-</button>
-                <p class="quantity">{{ numSelected[name] }}</p>
-                <button @click="incrNumSelected(name, quantity)" class="modifier">+</button>
-                <button @click="addToCart(name)" class="adder">Add to Cart</button>
+        <SearchBar @change="change"></SearchBar>
+        <div v-for="(quantity, name) in inventory">
+            <div v-if="isMatch(name)" class="item">
+                <div class="desc">
+                    <h3 class="name">{{ name }}</h3>
+                    <p class="quantity"><b>Quantity Available:</b> {{ quantity }}</p>
+                </div>
+                <div class="controls">
+                    <button @click="decrNumSelected(name)" class="modifier">-</button>
+                    <p class="quantity">{{ numSelected[name] }}</p>
+                    <button @click="incrNumSelected(name, quantity)" class="modifier">+</button>
+                    <button @click="addToCart(name)" class="adder">Add to Cart</button>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import SearchBar from '@/components/Order/SearchBar.vue';
+
 export default {
     name: "Inventory",
+    components: { SearchBar },
     props: {
         inventory: {
             type: Object,
@@ -32,7 +38,8 @@ export default {
     },
     data() {
         return {
-            numSelected: {}
+            numSelected: {},
+            filter: ''
         }
     },
     methods: {
@@ -48,6 +55,12 @@ export default {
             const numSelected = this.numSelected[name];
             if (this.numSelected[name] !== 0) this.$emit('add-to-cart', name, numSelected);
             this.numSelected[name] = 0;
+        },
+        change(filter) {
+            this.filter = filter.toLowerCase();
+        },
+        isMatch(name) {
+            return name.toLowerCase().includes(this.filter);
         }
     }
 }
@@ -57,8 +70,10 @@ export default {
 .container {
     padding-right: 10px;
 }
+
 .title {
-    margin-top:0px;
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 .name {
