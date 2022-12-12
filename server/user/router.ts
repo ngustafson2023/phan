@@ -31,12 +31,12 @@ router.get("/session", [], async (req: Request, res: Response) => {
  *
  * @return - foodbanks
  */
-router.get("/", [], async (req: Request, res: Response) => {
-  const { isFoodbank } = req.query;
+router.get("/", async (req: Request, res: Response) => {
+  const { isFoodBank } = req.query;
 
-  console.log("q string", req.query);
-  if (isFoodbank === "true") {
+  if (isFoodBank === "true") {
     const foodBanks = await UserCollection.findAllFoodBanks();
+    console.log(foodBanks);
     console.log("banks", foodBanks.map(util.constructUserResponse));
     return res.status(200).json({
       message: "food banks found successfully.",

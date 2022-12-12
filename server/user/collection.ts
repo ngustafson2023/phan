@@ -35,7 +35,7 @@ class UserCollection {
   static async findOneByUserId(
     userId: Types.ObjectId | string
   ): Promise<HydratedDocument<User>> {
-    return UserModel.findOne({ _id: userId });
+    return await UserModel.findOne({ _id: userId });
   }
 
   /**
@@ -47,7 +47,7 @@ class UserCollection {
   static async findOneByUsername(
     username: string
   ): Promise<HydratedDocument<User>> {
-    return UserModel.findOne({
+    return await UserModel.findOne({
       username: new RegExp(`^${username.trim()}$`, "i"),
     });
   }
@@ -63,7 +63,7 @@ class UserCollection {
     username: string,
     password: string
   ): Promise<HydratedDocument<User>> {
-    return UserModel.findOne({
+    return await UserModel.findOne({
       username: new RegExp(`^${username.trim()}$`, "i"),
       password,
     });
@@ -75,7 +75,14 @@ class UserCollection {
    * @return {Promise<HydratedDocument<User>> | Promise<null>} - The user with the given username, if any
    */
   static async findAllFoodBanks(): Promise<HydratedDocument<User>[]> {
-    return UserModel.find({ isFoodBank: true });
+    console.log(
+      "trying to find all foodbanks!",
+      await UserModel.find({ isFoodBank: true })
+    );
+
+    UserModel.find({}).then((res) => console.log(res));
+
+    return await UserModel.find({ isFoodBank: true });
   }
 
   /**

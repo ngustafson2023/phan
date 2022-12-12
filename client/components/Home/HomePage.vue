@@ -22,7 +22,7 @@
     </section>
     <section
       v-else-if="
-        this.$store.state.user.name && this.$store.state.user.isFoodBank
+        this.$store.state.user.username && this.$store.state.user.isFoodBank
       "
     >
       <FoodBankHome />

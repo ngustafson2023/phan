@@ -43,6 +43,7 @@ export default {
   components: { BookSlot, ClickablePill, TextPill },
   beforeCreate() {
     // GET food banks
+    console.log("/api/users?isFoodBank=true");
     fetch("/api/users?isFoodBank=true", {
       credentials: "same-origin",
       params: {
@@ -50,16 +51,33 @@ export default {
         restrictions: this.filters,
       },
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        console.log("result is", res);
+        return await res.json();
+      })
       .then((res) => {
         this.foodbanks = res.foodBanks;
       });
+
+    // get all food items
+    fetch("/api/foodItem", {
+      credentials: "same-origin",
+    })
+      .then(async (res) => {
+        return await res.json();
+      })
+      .then((res) => {
+        this.foodItems = res.foodItems;
+      });
   },
+
   data() {
     return {
       foodbanks: [],
       stocks: [],
       filters: [],
+      foodItems: [],
+      filteredFoodItems: [],
       aterts: {},
       STOCK_LEVELS: ["Low", "Medium", "High"],
       RESTRICTIONS: ["Vegan", "Gluten Free", "Dairy Free"],
@@ -69,6 +87,12 @@ export default {
     async book() {
       // Nick add stuff here
     },
+
+    // filterRestrictions(tag) {
+    // 	// get foodbanks s.t. the fooditems they have match
+    // 	const url = "/api/foodItems?"
+    // }
+
     editStockLevels(item, shouldInclude) {
       if (shouldInclude && !this.stocks.includes(item)) {
         this.stocks.push(item);
@@ -85,20 +109,21 @@ export default {
       }
       this.updateSlots();
     },
+
     updateSlots() {
-      fetch(
-        `/api/foodbanks?stockLevels=${this.stocks.join(
-          ","
-        )}&restrictions=${this.filters.join(",")}`,
-        {
-          credentials: "same-origin",
-        }
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          this.foodbanks = res.foodbanks;
-          console.log(res);
-        });
+      // fetch(
+      //   `/api/foodbanks?stockLevels=${this.stocks.join(
+      //     ","
+      //   )}&restrictions=${this.filters.join(",")}`,
+      //   {
+      //     credentials: "same-origin",
+      //   }
+      // )
+      //   .then((res) => res.json())
+      //   .then((res) => {
+      //     this.foodbanks = res.foodbanks;
+      //     console.log(res);
+      //   });
     },
   },
 };
