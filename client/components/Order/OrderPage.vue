@@ -5,27 +5,12 @@
                 <h2>Ordering from {{ $store.state.orderingFrom }}</h2>
             </header>
         </section>
-        <section>
-            <header>
-                <h2>Inventory</h2>
-            </header>
-            <!-- <article v-for="(quantity, name) in inventory">
-                <p>{{ name }}: {{ quantity }}</p>
-                <button @click="updateCart(name, quantity)">Add to Cart</button>
-            </article> -->
-            <div v-for="(quantity, name) in inventory">
-                <InventoryItem v-bind:name="name" v-bind:quantity="quantity" @updateCart="updateCart"></InventoryItem>
-            </div>
-        </section>
-        <section>
-            <header>
-                <h2>My Cart</h2>
-            </header>
-            <article v-for="(quantity, name) in cart">
-                <p>{{ name }}: {{ quantity }}</p>
-            </article>
-        </section>
-        <section>
+
+        <Inventory @add-to-cart="addToCart" :inventory="inventory"></Inventory>
+
+        <Cart @remove-from-cart="removeFromCart" :cart="cart"></Cart>
+
+        <!-- <section>
             <header>
                 <h2>Slots</h2>
             </header>
@@ -35,55 +20,42 @@
                 <p @click="assignSlot(slotObj._id, slotObj)">{{ formatDate(slotObj.startTime) }} to {{ formatDate(slotObj.endTime) }}
                 </p>
             </article>
-        </section>
+        </section> -->
+
         <section>
             <button @click="submit">Submit</button>
         </section>
 
-        <section class="alerts">
+<!--         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
                 <p>{{ alert }}</p>
             </article>
-        </section>
+        </section> -->
     </main>
 </template>
 
 <script>
 import TextPill from "@/components/common/TextPill.vue";
-import InventoryItem from "@/components/Order/InventoryItem.vue";
+import Inventory from "@/components/Order/Inventory.vue";
+import Cart from '@/components/Order/Cart.vue';
 
 export default {
     name: "OrderPage",
-    components: { InventoryItem },
+    components: { Inventory, Cart },
     mounted() {
-        this.refreshInventory();
-
-        // GET slots
-        const options = {
-            headers: { "Content-Type": "application/json" },
-            credentials: "same-origin", // Sends express-session credentials with request
-        };
-        try {
-            fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options)
-                .then((res) => res.json())
-                .then((res) => {
-                    for (const slotObj of res.slots) {
-                        this.slots.push(slotObj);
-                    } 
-                    this.$forceUpdate();
-                });
-        } catch (e) {
-            this.$set(this.alerts, e, "error");
-            setTimeout(() => this.$delete(this.alerts, e), 3000);
-        }
+        this.getInventory();
+        //this.getSlots();
     },
     data() {
         return {
-            inventory: {},
+            inventory: {
+                "bananas": 25,
+                "apples": 12
+            },
             cart: {},
-            slotId: null,
+            /* slotId: null,
             slot: null,
-            slots: [],
+            slots: [], */
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
                 const message = "Successfully placed order!";
@@ -93,25 +65,27 @@ export default {
         };
     },
     methods: {
-        assignSlot(slotId, slot) {
-            this.slotId = slotId;
-            this.slot = slot;
+        async getInventory() {
+            fetch(`/api/fooditem?id=${this.$store.state.orderingFromId}`, {
+                credentials: 'same-origin'
+            }).then(res => res.json()).then(res => {
+                for (const foodItem of res) {
+                    this.inventory[foodItem.name] = parseInt(foodItem.quantity);
+                }
+                this.$forceUpdate();
+            });
         },
-        updateCart(name, quantity) {
-            if (quantity === 0) return;
-
-            if (!this.cart.hasOwnProperty(name)) {
-                this.cart[name] = 1;
-            } else {
-                this.cart[name] = this.cart[name] + 1;
-            }
-            this.inventory[name] = this.inventory[name] - 1;
-            this.$forceUpdate();
+        addToCart(name, numSelected) {
+            if (!this.cart.hasOwnProperty(name)) this.$set(this.cart, name, numSelected);
+            else this.cart[name] += numSelected;
+            this.inventory[name] -= numSelected;
+        },
+        removeFromCart(name) {
+            this.inventory[name] += this.cart[name];
+            this.$delete(this.cart, name);
         },
         async submit() {
-            if (!this.slotId) return;
-
-            // POST order
+            //if (!this.slotId) return;
             const options = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -140,16 +114,28 @@ export default {
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
             }
         },
-        async refreshInventory() {
-            // GET food bank inventory
-            fetch(`/api/fooditem?id=${this.$store.state.orderingFromId}`, {
-                credentials: 'same-origin'
-            }).then(res => res.json()).then(res => {
-                for (const foodItem of res) {
-                    this.inventory[foodItem.name] = parseInt(foodItem.quantity);
-                }
-                this.$forceUpdate();
-            });
+        /* async getSlots() {
+            const options = {
+                headers: { "Content-Type": "application/json" },
+                credentials: "same-origin", // Sends express-session credentials with request
+            };
+            try {
+                fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options)
+                    .then((res) => res.json())
+                    .then((res) => {
+                        for (const slotObj of res.slots) {
+                            this.slots.push(slotObj);
+                        } 
+                        this.$forceUpdate();
+                    });
+            } catch (e) {
+                this.$set(this.alerts, e, "error");
+                setTimeout(() => this.$delete(this.alerts, e), 3000);
+            }
+        },
+        assignSlot(slotId, slot) {
+            this.slotId = slotId;
+            this.slot = slot;
         },
         formatDate(dateObj) {
             const date = new Date(dateObj);
@@ -164,7 +150,7 @@ export default {
             minutes = minutes < 10 ? "0" + minutes : minutes;
             var strTime = hours + ":" + minutes + " " + ampm;
             return strTime;
-        }
+        } */
     }
 };
 </script>
@@ -188,7 +174,7 @@ section .scrollbox {
     overflow-y: scroll;
 }
 
-.alerts {
+/* .alerts {
     position: absolute;
     z-index: 99;
     bottom: 0;
@@ -215,5 +201,5 @@ section .scrollbox {
 
 .alerts .success {
     background-color: rgb(45, 135, 87);
-}
+} */
 </style>
