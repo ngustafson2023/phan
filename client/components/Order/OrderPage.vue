@@ -1,14 +1,9 @@
 <template>
-    <main>
-        <section>
-            <header>
-                <h2>Ordering from {{ $store.state.orderingFrom }}</h2>
-            </header>
-        </section>
-
-        <Inventory @add-to-cart="addToCart" :inventory="inventory"></Inventory>
-
-        <Cart @remove-from-cart="removeFromCart" :cart="cart"></Cart>
+    <main style="padding:20px;">
+        <div class="row">
+            <Inventory @add-to-cart="addToCart" :inventory="inventory"></Inventory>
+            <Cart @remove-from-cart="removeFromCart" :cart="cart"></Cart>
+        </div>
 
         <!-- <section>
             <header>
@@ -156,6 +151,16 @@ export default {
 </script>
 
 <style scoped>
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.row > * {
+    flex: 1;
+}
+
 section {
     display: flex;
     flex-direction: column;

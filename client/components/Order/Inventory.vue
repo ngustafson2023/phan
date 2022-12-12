@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="container">
+        <h2 class="title">Ordering from {{ $store.state.orderingFrom }}</h2>
         <div v-for="(quantity, name) in inventory" class="item">
             <div class="desc">
                 <h3 class="name">{{ name }}</h3>
@@ -7,7 +8,7 @@
             </div>
             <div class="controls">
                 <button @click="decrNumSelected(name)" class="modifier">-</button>
-                <p>{{ numSelected[name] }}</p>
+                <p class="quantity">{{ numSelected[name] }}</p>
                 <button @click="incrNumSelected(name, quantity)" class="modifier">+</button>
                 <button @click="addToCart(name)" class="adder">Add to Cart</button>
             </div>
@@ -53,60 +54,65 @@ export default {
 </script>
 
 <style scoped>
+.container {
+    padding-right: 10px;
+}
+.title {
+    margin-top:0px;
+}
 
-    .name {
-        margin: 0;
-        margin-bottom: 5px;
-    }
+.name {
+    margin: 0;
+    margin-bottom: 5px;
+}
 
-    .quantity {
-        margin: 0;
-    }
+.quantity {
+    margin: 0;
+}
 
-    .item {
-        display: flex;
-	    flex-direction: row;
-        justify-content: space-between;
-        background-color: whitesmoke;
-	    padding: 10px;
-	    margin-bottom: 10px;
-	    border-radius: 20px;
-    }
+.item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: whitesmoke;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+}
 
-    .desc {
-        display: flex;
-	    flex-direction: column;
-        justify-content: center;
-    }
+.desc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-    .controls {
-        display: flex;
-	    flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        width: 240px;
-    }
-    
-    .modifier {
-        border-radius: 10px;
-        background-color: #ccc;
-        border-style: none;
-        font-family: inherit;
-        font-size: 25px;
-        cursor: pointer;
-        width: 38.5px;
-        height: 38.5px;
-    }
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    width: 240px;
+}
 
-    .adder {
-        padding: 10px;
-        border-radius: 10px;
-        background-color: lightgreen;
-        border-style: none;
-        font-family: inherit;
-        font-size: 16px;
-        cursor: pointer;
-    }
+.modifier {
+    border-radius: 10px;
+    background-color: #ccc;
+    border-style: none;
+    font-family: inherit;
+    font-size: 25px;
+    cursor: pointer;
+    width: 38.5px;
+    height: 38.5px;
+}
 
+.adder {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: lightgreen;
+    border-style: none;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+}
 </style>
