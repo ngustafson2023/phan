@@ -3,7 +3,8 @@
         <header>
             <h2>My Cart</h2>
         </header>
-        <article v-for="(quantity, name) in cart">
+        <p v-if="!Object.keys(cart).length">No items in cart</p>
+        <article v-else v-for="(quantity, name) in cart">
             <p>{{ name }}: {{ quantity }}</p>
             <button @click="removeFromCart(name)">Remove From Cart</button>
         </article>
