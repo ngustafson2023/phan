@@ -40,8 +40,19 @@ export default {
     data() {
         return {
             inventory: {
-                "bananas": 25,
-                "apples": 12
+                "bananas": {
+                    quantity: 25,
+                    restrictions: [
+                        "Dairy Free"
+                    ]
+                },
+                "apples": {
+                    quantity: 12,
+                    restrictions: [
+                        "Gluten Free",
+                        "Vegan"
+                    ]
+                }
             },
             cart: {},
             /* slotId: null,
@@ -61,7 +72,10 @@ export default {
                 credentials: 'same-origin'
             }).then(res => res.json()).then(res => {
                 for (const foodItem of res) {
-                    this.inventory[foodItem.name] = parseInt(foodItem.quantity);
+                    this.inventory[foodItem.name] = {
+                        quantity: parseInt(foodItem.quantity),
+                        restrictions: foodItem.restrictions
+                    };
                 }
                 this.$forceUpdate();
             });
@@ -69,10 +83,10 @@ export default {
         addToCart(name, numSelected) {
             if (!this.cart.hasOwnProperty(name)) this.$set(this.cart, name, numSelected);
             else this.cart[name] += numSelected;
-            this.inventory[name] -= numSelected;
+            this.inventory[name].quantity -= numSelected;
         },
         removeFromCart(name) {
-            this.inventory[name] += this.cart[name];
+            this.inventory[name].quantity += this.cart[name];
             this.$delete(this.cart, name);
         },
         async submit() {

@@ -9,16 +9,16 @@
                 :callback="editTags"
             />
         </div>
-        <div v-for="(quantity, name) in inventory">
-            <div v-if="isMatch(name)" class="item">
+        <div v-for="(obj, name) in inventory">
+            <div v-if="isSearchMatch(name) && isTagMatch(name)" class="item">
                 <div class="desc">
                     <h3 class="name">{{ name }}</h3>
-                    <p class="quantity"><b>Quantity Available:</b> {{ quantity }}</p>
+                    <p class="quantity"><b>Quantity Available:</b> {{ obj.quantity }}</p>
                 </div>
                 <div class="controls">
                     <button @click="decrNumSelected(name)" class="modifier">-</button>
                     <p class="quantity">{{ numSelected[name] }}</p>
-                    <button @click="incrNumSelected(name, quantity)" class="modifier">+</button>
+                    <button @click="incrNumSelected(name, obj.quantity)" class="modifier">+</button>
                     <button @click="addToCart(name)" class="adder">Add to Cart</button>
                 </div>
             </div>
@@ -68,8 +68,14 @@ export default {
         change(filter) {
             this.filter = filter.toLowerCase();
         },
-        isMatch(name) {
+        isSearchMatch(name) {
             return name.toLowerCase().includes(this.filter);
+        },
+        isTagMatch(name) {
+            for (const tag of this.tags) {
+                if (!this.inventory[name].restrictions.includes(tag)) return false;
+            }
+            return true;
         },
         editTags(item, shouldInclude) {
             if (shouldInclude && !this.tags.includes(item)) {
@@ -77,7 +83,6 @@ export default {
             } else if (!shouldInclude && this.tags.includes(item)) {
                 this.tags = this.tags.filter((s) => s !== item);
             }
-            console.log(this.tags);
         }
     }
 }
