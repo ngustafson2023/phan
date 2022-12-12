@@ -23,12 +23,16 @@ export default {
 <style scoped>
 .container {
     background-color: whitesmoke;
-    padding: 10px;
+    padding: 5px 10px;
     margin-bottom: 10px;
     border-radius: 20px;
 }
 
 input {
+    background-color: whitesmoke;
     width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
 }
 </style>
