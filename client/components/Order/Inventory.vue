@@ -4,7 +4,7 @@
         <div v-for="(quantity, name) in inventory" class="item">
             <div class="desc">
                 <h3 class="name">{{ name }}</h3>
-                <p class="quantity">Quantity Available: {{ quantity }}</p>
+                <p class="quantity"><b>Quantity Available:</b> {{ quantity }}</p>
             </div>
             <div class="controls">
                 <button @click="decrNumSelected(name)" class="modifier">-</button>

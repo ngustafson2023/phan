@@ -20,12 +20,16 @@
                 <hr>
             </div>
         </div>
+        <OrderDetails @submit="submit" :valid="Object.keys(cart).length !== 0"></OrderDetails>
     </div>
 </template>
 
 <script>
+import OrderDetails from '@/components/Order/OrderDetails.vue';
+
 export default {
     name: "Cart",
+    components: { OrderDetails },
     props: {
         cart: {
             type: Object,
@@ -35,6 +39,9 @@ export default {
     methods: {
         removeFromCart(name) {
             this.$emit('remove-from-cart', name);
+        },
+        submit() {
+            this.$emit('submit');
         }
     }
 }

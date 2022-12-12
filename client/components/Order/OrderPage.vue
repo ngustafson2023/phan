@@ -2,7 +2,7 @@
     <main style="padding:20px;">
         <div class="row">
             <Inventory @add-to-cart="addToCart" :inventory="inventory"></Inventory>
-            <Cart @remove-from-cart="removeFromCart" :cart="cart"></Cart>
+            <Cart @remove-from-cart="removeFromCart" @submit="submit" :cart="cart"></Cart>
         </div>
 
         <!-- <section>
@@ -16,10 +16,6 @@
                 </p>
             </article>
         </section> -->
-
-        <section>
-            <button @click="submit">Submit</button>
-        </section>
 
 <!--         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
