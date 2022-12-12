@@ -2,6 +2,13 @@
     <div class="container">
         <h2 class="title">Ordering from {{ $store.state.orderingFrom }}</h2>
         <SearchBar @change="change"></SearchBar>
+        <div class="tags">
+            <Tag
+                v-for="r in $store.state.tags"
+                :title="r"
+                :callback="editTags"
+            />
+        </div>
         <div v-for="(quantity, name) in inventory">
             <div v-if="isMatch(name)" class="item">
                 <div class="desc">
@@ -21,10 +28,11 @@
 
 <script>
 import SearchBar from '@/components/Order/SearchBar.vue';
+import Tag from "@/components/Order/Tag.vue";
 
 export default {
     name: "Inventory",
-    components: { SearchBar },
+    components: { SearchBar, Tag },
     props: {
         inventory: {
             type: Object,
@@ -39,7 +47,8 @@ export default {
     data() {
         return {
             numSelected: {},
-            filter: ''
+            filter: '',
+            tags: []
         }
     },
     methods: {
@@ -61,12 +70,25 @@ export default {
         },
         isMatch(name) {
             return name.toLowerCase().includes(this.filter);
+        },
+        editTags(item, shouldInclude) {
+            if (shouldInclude && !this.tags.includes(item)) {
+                this.tags.push(item);
+            } else if (!shouldInclude && this.tags.includes(item)) {
+                this.tags = this.tags.filter((s) => s !== item);
+            }
+            console.log(this.tags);
         }
     }
 }
 </script>
 
 <style scoped>
+.tags {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+}
 .container {
     padding-right: 10px;
 }
