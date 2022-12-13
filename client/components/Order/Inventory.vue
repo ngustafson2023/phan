@@ -37,13 +37,18 @@ export default {
         inventory: {
             type: Object,
             required: true
+        },
+        numSelected: {
+            type: Object,
+            required: true
         }
     },
-    created() {
+    /* mounted() {
         for (const [name, quantity] of Object.entries(this.inventory)) {
-            this.numSelected[name] = 0;
+            //this.numSelected[name] = 0;
+            this.$set(this.numSelected, name, 0);
         }
-    },
+    }, */
     data() {
         return {
             numSelected: {},
@@ -53,12 +58,10 @@ export default {
     },
     methods: {
         incrNumSelected(name, quantity) {
-            if (this.numSelected[name] < quantity) this.numSelected[name]++;
-            this.$forceUpdate();
+            this.$emit('incr-num-selected', name, quantity);
         },
         decrNumSelected(name) {
-            if (this.numSelected[name] !== 0) this.numSelected[name]--;
-            this.$forceUpdate();
+            this.$emit('decr-num-selected', name);
         },
         addToCart(name) {
             const numSelected = this.numSelected[name];

@@ -1,7 +1,8 @@
 <template>
     <main style="padding:20px;">
         <div class="row">
-            <Inventory @add-to-cart="addToCart" :inventory="inventory"></Inventory>
+            <Inventory @add-to-cart="addToCart" @incr-num-selected="incrNumSelected" @decr-num-selected="decrNumSelected"
+                    :inventory="inventory" :numSelected="numSelected"></Inventory>
             <Cart @remove-from-cart="removeFromCart" @submit="submit" :cart="cart"></Cart>
         </div>
 
@@ -39,22 +40,9 @@ export default {
     },
     data() {
         return {
-            inventory: {
-                "bananas": {
-                    quantity: 25,
-                    restrictions: [
-                        "Dairy Free"
-                    ]
-                },
-                "apples": {
-                    quantity: 12,
-                    restrictions: [
-                        "Gluten Free",
-                        "Vegan"
-                    ]
-                }
-            },
+            inventory: {},
             cart: {},
+            numSelected: {},
             /* slotId: null,
             slot: null,
             slots: [], */
@@ -72,11 +60,14 @@ export default {
                 credentials: 'same-origin'
             }).then(res => res.json()).then(res => {
                 for (const foodItem of res) {
-                    this.inventory[foodItem.name] = {
+                    const obj = {
                         quantity: parseInt(foodItem.quantity),
                         restrictions: foodItem.restrictions
                     };
+                    this.$set(this.inventory, foodItem.name, obj);
+                    this.$set(this.numSelected, foodItem.name, 0);
                 }
+                console.log(this.numSelected);
                 this.$forceUpdate();
             });
         },
@@ -118,6 +109,14 @@ export default {
                 this.$set(this.alerts, e, 'error');
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
             }
+        },
+        incrNumSelected(name, quantity) {
+            if (this.numSelected[name] < quantity) this.numSelected[name]++;
+            this.$forceUpdate();
+        },
+        decrNumSelected(name) {
+            if (this.numSelected[name] !== 0) this.numSelected[name]--;
+            this.$forceUpdate();
         },
         /* async getSlots() {
             const options = {
