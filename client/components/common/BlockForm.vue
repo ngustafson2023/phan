@@ -3,7 +3,7 @@
 
 <template>
   <form @submit.prevent="submit">
-    <h3>{{ title }}</h3>
+    <!-- <h3>{{ title }}</h3>  -->
     <article v-if="fields.length">
       <div v-for="field in fields" :key="field.id">
         <label :for="field.id">{{ field.label }}:</label>
@@ -25,7 +25,7 @@
     <article v-else>
       <p>{{ content }}</p>
     </article>
-    <button type="submit">
+    <button type="submit" v-bind:class="{ 'pill-button-active': value, 'pill-button': !value }">
       {{ title }}
     </button>
     <section class="alerts">
@@ -105,16 +105,31 @@ export default {
 </script>
 
 <style scoped>
+/*
 form {
-  border: 1px solid #111;
+  border-style: none;
+  border-radius: 20px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin-bottom: 14px;
   position: relative;
+}*/
+form{
+  padding: 10px 20px;
+	border-radius: 20px;
+	margin: 0px 10px;
+	border-style: none;
 }
 
+textarea{
+  padding: 10px 20px;
+   background-color: darkgray; 
+	border-radius: 20px;
+	margin: 0px 10px;
+	border-style: none;
+}
 article > div {
   display: flex;
   flex-direction: column;
@@ -136,5 +151,26 @@ form h3 {
 textarea {
   font-family: inherit;
   font-size: inherit;
+}
+.pill-button {
+	padding: 10px 20px;
+	background-color: darkgray;
+	border-radius: 20px;
+	margin: 0px 10px;
+	border-style: none;
+}
+
+.pill-button-active {
+	padding: 10px 20px;
+	background-color: darkgray;
+	border-radius: 20px;
+	margin: 0px 10px;
+	border-style: solid;
+	border-width: 3px;
+	border-color: black;
+}
+
+.pill-button:hover {
+	cursor: pointer;
 }
 </style>

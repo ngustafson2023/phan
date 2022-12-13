@@ -29,11 +29,14 @@
     </section>
     <section v-else>
       <header>
-        <h2>Welcome to Phan!</h2>
+        <h2 v-bind:style="{textAlign:'center'}">Welcome to Phan!</h2>
       </header>
       <article>
         <h3>
-          <router-link to="/login"> Sign in </router-link>
+          <!-- <b-router-link to="/login">go </b-router-link> -->
+          <LoginForm />
+          <router-link to="/login" tag="button" v-bind:class="{ 'pill-button-active': value, 'pill-button': !value }"
+          > Create New Account </router-link>
         </h3>
       </article>
     </section>
@@ -46,10 +49,11 @@ import PastOrderComponent from "./PastOrder.vue";
 import FindPage from "@/components/Find/FindPage.vue";
 import FoodItemComponent from "@/components/FoodItem/SingleFoodItem.vue";
 import FoodBankHome from "@/components/FoodBank/FoodBankHome.vue";
+import LoginForm from '@/components/Login/LoginForm.vue';
 
 export default {
   name: "HomePage",
-  components: { BookSlot, PastOrderComponent, FindPage, FoodBankHome },
+  components: { BookSlot, PastOrderComponent, FindPage, FoodBankHome,LoginForm },
   beforeCreate() {
     // GET orders a user has placed
     if (this.$store.state.user.username && !this.$store.state.user.isFoodBank) {
@@ -72,6 +76,7 @@ export default {
 </script>
 
 <style scoped>
+
 section {
   display: flex;
   flex-direction: column;
@@ -89,4 +94,26 @@ section .scrollbox {
   padding: 3%;
   overflow-y: scroll;
 }
+.pill-button {
+	padding: 10px 20px;
+	background-color: darkgray;
+	border-radius: 20px;
+	margin: 0px 10px;
+	border-style: none;
+}
+
+.pill-button-active {
+	padding: 10px 20px;
+	background-color: darkgray;
+	border-radius: 20px;
+	margin: 0px 10px;
+	border-style: solid;
+	border-width: 3px;
+	border-color: black;
+}
+
+.pill-button:hover {
+	cursor: pointer;
+}
+
 </style>
