@@ -15,9 +15,10 @@
         <li>date joined: {{ $store.state.user.dateJoined }}</li>
       </ul>
     </section>
-    Current Slots:
-    {{ slots }}
-
+    <h3> Current Slots:</h3>
+    <div v-for="slot of slots">
+      <SlotComponent :slot="slot" />
+    </div>
     <AddSlotPage :slots="slots" />
     <h2>Update Inventory</h2>
     <div v-for="foodItem of inventory">
@@ -60,6 +61,7 @@ import LogoutForm from "@/components/Account/LogoutForm.vue";
 import FoodItemComponent from "@/components/FoodItem/SingleFoodItem.vue";
 import ClickablePill from "@/components/common/ClickablePill.vue";
 import AddSlotPage from "@/components/FoodBank/AddSlotPage.vue";
+import SlotComponent from "@/components/FoodBank/SlotComponent.vue";
 
 export default {
   name: "FoodBankHome",
@@ -69,6 +71,7 @@ export default {
     AddSlotPage,
     FoodItemComponent,
     ClickablePill,
+    SlotComponent
   },
   beforeCreate() {
     fetch(`/api/fooditem?id=${this.$store.state.user._id}`, {

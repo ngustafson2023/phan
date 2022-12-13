@@ -27,6 +27,8 @@ router.get("/", async (req: Request, res: Response) => {
   const inventory = await FoodItemCollection.findAllByFoodBank(
     req.query.id as string
   );
+
+  console.log("inventory",inventory);
   const response = inventory.map(util.constructFoodItemResponse);
   res.status(200).json(response);
 });

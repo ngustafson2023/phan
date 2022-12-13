@@ -27,7 +27,8 @@ const constructFoodItemResponse = (
   return {
     ...foodItemCopy,
     _id: foodItemCopy._id.toString(),
-    foodBankId: foodItemCopy.foodBankId._id.toString(),
+    //temporary change so I could run locally
+    foodBankId: foodItemCopy.foodBankId ? foodItemCopy.foodBankId.toString():"",
     name: foodItemCopy.name.toString(),
     quantity: foodItemCopy.quantity.toString(),
   };
