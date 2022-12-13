@@ -20,12 +20,12 @@ export default {
 		return {};
 	},
 	methods: {
-		async book() {
+		book() {
 			// Nick add stuff here and redirect
 			// this.foodbank._id should have the id
-			this.$store.commit("setOrderingFrom", this.foodbank.name);
+			this.$store.commit("setOrderingFrom", this.foodbank.username);
 			this.$store.commit("setOrderingFromId", this.foodbank._id);
-			this.$router.push("/order/");
+			this.$router.push("/order");
 		},
 	},
 };

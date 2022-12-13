@@ -53,7 +53,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (to.name === "Order" && !router.app.$store.state.orderingFrom) {
-    next({ name: "FindPage" }); // Go to find a foodbank page if user navigates to Order without selecting food bank
+    next({ name: "Home" }); // Go to find a foodbank page if user navigates to Order without selecting food bank
     return;
   }
 
