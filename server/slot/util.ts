@@ -6,7 +6,7 @@ type SlotResponse = {
   _id: string;
   foodBankId: string;
   startTime: Date;
-  endTime: Date;
+  // endTime: Date;
   quantity: Number;
 };
 
@@ -32,7 +32,7 @@ const constructSlotItemResponse = (
     _id: slotCopy._id.toString(),
     foodBankId: slotCopy.foodBankId._id.toString(),
     startTime: slotCopy.startTime,
-    endTime: slotCopy.endTime,
+    // endTime: slotCopy.endTime,
     quantity: slotCopy.quantity,
   };
 };
