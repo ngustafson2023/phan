@@ -16,11 +16,11 @@ const router = express.Router();
  * @return - currently logged in user, or null if not logged in
  */
 router.get("/session", [], async (req: Request, res: Response) => {
-  const user = await UserCollection.findOneByUserId(req.session.userId);
-  res.status(200).json({
-    message: "Your session info was found successfully.",
-    user: user ? util.constructUserResponse(user) : null,
-  });
+	const user = await UserCollection.findOneByUserId(req.session.userId);
+	res.status(200).json({
+		message: "Your session info was found successfully.",
+		user: user ? util.constructUserResponse(user) : null,
+	});
 });
 
 /** * Get users with the foodbanks flag
@@ -32,19 +32,17 @@ router.get("/session", [], async (req: Request, res: Response) => {
  * @return - foodbanks
  */
 router.get("/", async (req: Request, res: Response) => {
-  const { isFoodBank } = req.query;
+	const { isFoodBank } = req.query;
 
-  if (isFoodBank === "true") {
-    const foodBanks = await UserCollection.findAllFoodBanks();
-    console.log(foodBanks);
-    console.log("banks", foodBanks.map(util.constructUserResponse));
-    return res.status(200).json({
-      message: "food banks found successfully.",
-      foodBanks: foodBanks.map(util.constructUserResponse),
-    });
-  }
+	if (isFoodBank === "true") {
+		const foodBanks = await UserCollection.findAllFoodBanks();
+		return res.status(200).json({
+			message: "food banks found successfully.",
+			foodBanks: foodBanks.map(util.constructUserResponse),
+		});
+	}
 
-  return; // only need to find food banks
+	return; // only need to find food banks
 });
 
 /**
@@ -62,24 +60,21 @@ router.get("/", async (req: Request, res: Response) => {
  *
  */
 router.post(
-  "/session",
-  [
-    userValidator.isUserLoggedOut,
-    userValidator.isValidUsername,
-    userValidator.isValidPassword,
-    userValidator.isAccountExists,
-  ],
-  async (req: Request, res: Response) => {
-    const user = await UserCollection.findOneByUsernameAndPassword(
-      req.body.username,
-      req.body.password
-    );
-    req.session.userId = user._id.toString();
-    res.status(201).json({
-      message: "You have logged in successfully",
-      user: util.constructUserResponse(user),
-    });
-  }
+	"/session",
+	[
+		userValidator.isUserLoggedOut,
+		userValidator.isValidUsername,
+		userValidator.isValidPassword,
+		userValidator.isAccountExists,
+	],
+	async (req: Request, res: Response) => {
+		const user = await UserCollection.findOneByUsernameAndPassword(req.body.username, req.body.password);
+		req.session.userId = user._id.toString();
+		res.status(201).json({
+			message: "You have logged in successfully",
+			user: util.constructUserResponse(user),
+		});
+	}
 );
 
 /**
@@ -91,16 +86,12 @@ router.post(
  * @throws {403} - If user is not logged in
  *
  */
-router.delete(
-  "/session",
-  [userValidator.isUserLoggedIn],
-  (req: Request, res: Response) => {
-    req.session.userId = undefined;
-    res.status(200).json({
-      message: "You have been logged out successfully.",
-    });
-  }
-);
+router.delete("/session", [userValidator.isUserLoggedIn], (req: Request, res: Response) => {
+	req.session.userId = undefined;
+	res.status(200).json({
+		message: "You have been logged out successfully.",
+	});
+});
 
 /**
  * Create a user account.
@@ -116,21 +107,21 @@ router.delete(
  *
  */
 router.post(
-  "/",
-  [
-    userValidator.isUserLoggedOut,
-    userValidator.isValidUsername,
-    userValidator.isUsernameNotAlreadyInUse,
-    userValidator.isValidPassword,
-  ],
-  async (req: Request, res: Response) => {
-    const user = await UserCollection.addOne(req.body);
-    req.session.userId = user._id.toString();
-    res.status(201).json({
-      message: `Your account was created successfully. You have been logged in as ${user.username}`,
-      user: util.constructUserResponse(user),
-    });
-  }
+	"/",
+	[
+		userValidator.isUserLoggedOut,
+		userValidator.isValidUsername,
+		userValidator.isUsernameNotAlreadyInUse,
+		userValidator.isValidPassword,
+	],
+	async (req: Request, res: Response) => {
+		const user = await UserCollection.addOne(req.body);
+		req.session.userId = user._id.toString();
+		res.status(201).json({
+			message: `Your account was created successfully. You have been logged in as ${user.username}`,
+			user: util.constructUserResponse(user),
+		});
+	}
 );
 
 /**
@@ -146,21 +137,21 @@ router.post(
  * @throws {400} - If username or password are not of the correct format
  */
 router.patch(
-  "/",
-  [
-    userValidator.isUserLoggedIn,
-    userValidator.isValidUsername,
-    userValidator.isUsernameNotAlreadyInUse,
-    userValidator.isValidPassword,
-  ],
-  async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? ""; // Will not be an empty string since its validated in isUserLoggedIn
-    const user = await UserCollection.updateOne(userId, req.body);
-    res.status(200).json({
-      message: "Your profile was updated successfully.",
-      user: util.constructUserResponse(user),
-    });
-  }
+	"/",
+	[
+		userValidator.isUserLoggedIn,
+		userValidator.isValidUsername,
+		userValidator.isUsernameNotAlreadyInUse,
+		userValidator.isValidPassword,
+	],
+	async (req: Request, res: Response) => {
+		const userId = (req.session.userId as string) ?? ""; // Will not be an empty string since its validated in isUserLoggedIn
+		const user = await UserCollection.updateOne(userId, req.body);
+		res.status(200).json({
+			message: "Your profile was updated successfully.",
+			user: util.constructUserResponse(user),
+		});
+	}
 );
 
 /**
@@ -171,17 +162,13 @@ router.patch(
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in
  */
-router.delete(
-  "/",
-  [userValidator.isUserLoggedIn],
-  async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? ""; // Will not be an empty string since its validated in isUserLoggedIn
-    await UserCollection.deleteOne(userId);
-    req.session.userId = undefined;
-    res.status(200).json({
-      message: "Your account has been deleted successfully.",
-    });
-  }
-);
+router.delete("/", [userValidator.isUserLoggedIn], async (req: Request, res: Response) => {
+	const userId = (req.session.userId as string) ?? ""; // Will not be an empty string since its validated in isUserLoggedIn
+	await UserCollection.deleteOne(userId);
+	req.session.userId = undefined;
+	res.status(200).json({
+		message: "Your account has been deleted successfully.",
+	});
+});
 
 export { router as userRouter };
