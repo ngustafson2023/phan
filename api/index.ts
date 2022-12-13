@@ -13,7 +13,7 @@ import { foodItemRouter } from "../server/fooditem/router";
 import { orderRouter } from "../server/order/router";
 import { slotRouter } from "../server/slot/router";
 import MongoStore from "connect-mongo";
-import SlotCollection from "../server/slot/collection";
+import UserCollection from "../server/user/collection";
 // Load environmental variables
 dotenv.config({});
 
@@ -37,6 +37,28 @@ const client = mongoose
 mongoose.connection.on("error", (err) => {
 	console.error(err);
 });
+
+// UserCollection.addOne({
+// 	username: "Boston Food Bank",
+// 	password: "password",
+// 	isFoodBank: true,
+// 	location: "85 Mt Vernon St, Boston MA",
+// 	lat:
+// });
+
+// UserCollection.addOne({
+// 	username: "North Food Bank",
+// 	password: "password",
+// 	isFoodBank: true,
+// 	location: "360 Dartmouth St, Boston MA",
+// });
+
+// UserCollection.addOne({
+// 	username: "First Food Bank",
+// 	password: "password",
+// 	isFoodBank: true,
+// 	location: "305 Washington St, Cambridge MA",
+// });
 
 // Initalize an express app
 const app = express();
@@ -79,13 +101,6 @@ app.use("/api/fooditem", foodItemRouter);
 app.use("/api/slot", slotRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/slots", slotRouter);
-
-SlotCollection.addOne(
-	new Types.ObjectId("638d1bbd295e35f6cdf3e760"),
-	new Date("2022-12-03"),
-	new Date("2022-12-04"),
-	7
-);
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {

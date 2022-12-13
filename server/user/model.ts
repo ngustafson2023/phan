@@ -8,43 +8,47 @@ import { Schema, model } from "mongoose";
 
 // Type definition for User on the backend
 export type User = {
-  _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  username: string;
-  password: string;
-  isFoodBank: Boolean;
-  location: String;
-  visible: Boolean;
-  opensAt: Date;
-  closesAt: Date;
-  dateJoined: Date;
+	_id: Types.ObjectId; // MongoDB assigns each object this ID on creation
+	username: string;
+	password: string;
+	isFoodBank: Boolean;
+	location: String;
+	lat: number;
+	lng: number;
+	visible: Boolean;
+	opensAt: Date;
+	closesAt: Date;
+	dateJoined: Date;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
 // Users stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
 const UserSchema = new Schema({
-  // The user's username
-  username: {
-    type: String,
-    required: true,
-  },
-  // The user's password
-  password: {
-    type: String,
-    required: true,
-  },
+	// The user's username
+	username: {
+		type: String,
+		required: true,
+	},
+	// The user's password
+	password: {
+		type: String,
+		required: true,
+	},
 
-  isFoodBank: { type: Boolean, default: false },
+	isFoodBank: { type: Boolean, default: false },
 
-  location: { type: String, required: false },
-  visible: { type: Boolean, required: false },
-  opensAt: { type: Date, required: false },
-  closesAt: { type: Date, required: false },
-  // The date the user joined
-  dateJoined: {
-    type: Date,
-    required: true,
-  },
+	location: { type: String, required: false },
+	lat: { type: Number, required: false },
+	lng: { type: Number, required: false },
+	visible: { type: Boolean, required: false },
+	opensAt: { type: Date, required: false },
+	closesAt: { type: Date, required: false },
+	// The date the user joined
+	dateJoined: {
+		type: Date,
+		required: true,
+	},
 });
 
 const UserModel = model<User>("User", UserSchema);
