@@ -7,20 +7,18 @@ const isValidTimeSlot = async (
   res: Response,
   next: NextFunction
 ) => {
-  const endTime = req.params.endTime || req.body.endTime || req.query.endTime;
   const startTime =
     req.params.startTime || req.body.startTime || req.query.startTime;
 
-  const validTimeline = endTime > startTime;
   const quantity =
     req.params.quantity || req.body.quantity || req.query.quantity;
 
   const validQuant = quantity > 0;
 
-  return validTimeline && quantity
+  return startTime && quantity
     ? next()
     : res.status(404).json({
-        error: "Error slot could not be created. please try again later",
+        error: "Error slot could not be created. please enter all information",
       });
 };
 
@@ -67,4 +65,9 @@ const isValidSlotModifier = async (
         error:
           "slot cannot be modified. if you are the food bank that owns this slot, please log in and try again",
       });
+};
+
+export {
+  isValidTimeSlot,
+
 };

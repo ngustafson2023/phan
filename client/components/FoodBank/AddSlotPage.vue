@@ -14,10 +14,6 @@
           <input id="textarea" v-model="startTime" type="time" />
         </div>
         <div>
-          <label class="no-padding">End:</label>
-          <input id="textarea" v-model="endTime" type="time" />
-        </div>
-        <div>
           <label class="no-padding">Quantity:</label>
           <input
             id="textarea"
@@ -58,7 +54,6 @@ export default {
       // date:new Date().toISOString().substr(0, 10),
       date: new Date(),
       startTime: "",
-      endTime: "",
       quantity: 0,
     };
   },
@@ -73,7 +68,6 @@ export default {
         body: JSON.stringify({
           foodBankId: this.$store.state.user._id,
           startTime: new Date(this.date + "T" + this.startTime),
-          endTime: new Date(this.date + "T" + this.endTime),
           quantity: this.quantity,
         }),
       };

@@ -6,7 +6,6 @@ export type Slot = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   foodBankId: Types.ObjectId;
   startTime: Date;
-  endTime: Date;
   quantity: Number;
 };
 
@@ -16,7 +15,6 @@ export type Slot = {
 const SlotSchema = new Schema({
   foodBankId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   startTime: { type: Date, required: true },
-  endTime: { type: Date, required: true },
   quantity: { type: Number, required: true, min: 0 },
 });
 

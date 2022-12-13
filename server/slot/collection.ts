@@ -10,10 +10,9 @@ class SlotCollection {
 	static async addOne(
 		foodBankId: Types.ObjectId | string,
 		startTime: Date,
-		endTime: Date,
 		quantity: Number
 	): Promise<HydratedDocument<Slot>> {
-		const newSlot = new SlotModel({ foodBankId, startTime, endTime, quantity });
+		const newSlot = new SlotModel({ foodBankId, startTime, quantity });
 
 		return (await newSlot.save()).populate("foodBankId");
 	}
@@ -26,13 +25,11 @@ class SlotCollection {
 	static async findOne(
 		foodBankId: Types.ObjectId,
 		startTime: Date,
-		endTime: Date,
 		quantity: Number
 	): Promise<HydratedDocument<Slot>> {
 		const newSlot = SlotModel.findOne({
 			foodBankId,
 			startTime,
-			endTime,
 			quantity,
 		});
 
@@ -64,17 +61,12 @@ class SlotCollection {
 	static async updateOneById(
 		slotId: Types.ObjectId,
 		startTime?: Date,
-		endTime?: Date,
 		quantity?: Number
 	): Promise<HydratedDocument<Slot>> {
 		const slot = SlotModel.findOne({ _id: slotId }) as any;
 
 		if (startTime) {
 			slot.startTime = startTime;
-		}
-
-		if (endTime) {
-			slot.endTime = endTime;
 		}
 
 		if (quantity) {
