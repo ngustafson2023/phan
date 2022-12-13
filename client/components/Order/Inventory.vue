@@ -43,15 +43,8 @@ export default {
             required: true
         }
     },
-    /* mounted() {
-        for (const [name, quantity] of Object.entries(this.inventory)) {
-            //this.numSelected[name] = 0;
-            this.$set(this.numSelected, name, 0);
-        }
-    }, */
     data() {
         return {
-            numSelected: {},
             filter: '',
             tags: []
         }

@@ -36,16 +36,18 @@ export default {
     components: { Inventory, Cart },
     mounted() {
         this.getInventory();
-        //this.getSlots();
+        this.getSlots();
     },
     data() {
         return {
             inventory: {},
             cart: {},
             numSelected: {},
-            /* slotId: null,
+
+            slotId: null,
             slot: null,
-            slots: [], */
+            slots: [],
+
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
                 const message = "Successfully placed order!";
@@ -67,7 +69,6 @@ export default {
                     this.$set(this.inventory, foodItem.name, obj);
                     this.$set(this.numSelected, foodItem.name, 0);
                 }
-                console.log(this.numSelected);
                 this.$forceUpdate();
             });
         },
@@ -117,6 +118,26 @@ export default {
         decrNumSelected(name) {
             if (this.numSelected[name] !== 0) this.numSelected[name]--;
             this.$forceUpdate();
+        },
+        async getSlots() {
+            const options = {
+                headers: { "Content-Type": "application/json" },
+                credentials: "same-origin", // Sends express-session credentials with request
+            };
+            try {
+                fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options)
+                    .then((res) => res.json())
+                    .then((res) => {
+                        for (const slotObj of res.slots) {
+                            this.slots.push(slotObj);
+                        } 
+                        console.log(this.slots);
+                        this.$forceUpdate();
+                    });
+            } catch (e) {
+                this.$set(this.alerts, e, "error");
+                setTimeout(() => this.$delete(this.alerts, e), 3000);
+            }
         },
         /* async getSlots() {
             const options = {
