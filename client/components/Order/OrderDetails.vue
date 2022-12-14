@@ -9,7 +9,7 @@
                 <PickupTime v-for="slot in obj" 
                 :selected="slot._id === selectedSlot" :title="formatTime(slot.startTime)" :id="slot._id" :callback="assignSlot"/>
             </div> 
-            <button v-if="valid" @click="submit" class="valid">Place Order</button>
+            <button v-if="valid && selectedSlot" @click="submit" class="valid">Place Order</button>
             <button v-else class="invalid">Place Order</button>
         </div>
     </div>
@@ -49,6 +49,7 @@ export default {
         assignSlot(slotId) {
             this.selectedSlot = slotId;
             this.$forceUpdate();
+            this.$emit('assign-slot', this.selectedSlot);
         },
     }
 }

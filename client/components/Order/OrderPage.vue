@@ -3,7 +3,7 @@
         <div class="row">
             <Inventory @add-to-cart="addToCart" @incr-num-selected="incrNumSelected" @decr-num-selected="decrNumSelected"
                     :foodBank="foodBank" :inventory="inventory" :numSelected="numSelected"></Inventory>
-            <Cart @remove-from-cart="removeFromCart" @submit="submit" 
+            <Cart @remove-from-cart="removeFromCart" @submit="submit" @assign-slot="assignSlot"
                     :foodBank="foodBank" :cart="cart" :slots="slots" :dates="dates"></Cart>
         </div>
 
@@ -48,7 +48,6 @@ export default {
             numSelected: {},
 
             slotId: null,
-            slot: null,
             slots: [],
             dates: {},
 
@@ -154,25 +153,11 @@ export default {
                 if (!this.dates.hasOwnProperty(date.toDateString())) this.$set(this.dates, date.toDateString(), [slotObj]);
                 else this.dates[date.toDateString()].push(slotObj);
             }
-        }
-        /* assignSlot(slotId, slot) {
+        },
+        assignSlot(slotId) {
             this.slotId = slotId;
-            this.slot = slot;
-        },
-        formatDate(dateObj) {
-            const date = new Date(dateObj);
-            return `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear() + 1} at ${this.formatTime(date)}`;
-        },
-        formatTime(date) {
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? "PM" : "AM";
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            var strTime = hours + ":" + minutes + " " + ampm;
-            return strTime;
-        } */
+            console.log(this.slotId);
+        }
     }
 };
 </script>

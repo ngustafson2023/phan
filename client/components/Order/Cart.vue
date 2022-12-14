@@ -20,7 +20,8 @@
                 <hr>
             </div>
         </div>
-        <OrderDetails @submit="submit" :foodBank="foodBank" :slots="slots" :dates="dates" :valid="Object.keys(cart).length !== 0"></OrderDetails>
+        <OrderDetails @submit="submit" @assign-slot="assignSlot"
+        :foodBank="foodBank" :slots="slots" :dates="dates" :valid="Object.keys(cart).length !== 0"></OrderDetails>
     </div>
 </template>
 
@@ -54,7 +55,10 @@ export default {
         },
         submit() {
             this.$emit('submit');
-        }
+        },
+        assignSlot(slotId) {
+            this.$emit('assign-slot', slotId);
+        },
     }
 }
 </script>
