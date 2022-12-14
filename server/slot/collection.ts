@@ -70,11 +70,10 @@ class SlotCollection {
 		}
 
 		if (quantity) {
-			console.log('yeah');
 			slot.quantity = quantity;
 		}
 		await slot.save();
-		return slot;
+		return slot.populate('foodBankId');
   }
 
 	/**

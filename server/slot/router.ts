@@ -68,7 +68,7 @@ router.get(
   }
 );
 
-// PUT /api/slot?id=slotId
+// PATCH /api/slot?id=slotId
 
 router.patch(
   '/',
@@ -81,7 +81,6 @@ router.patch(
     res.status(403).json({ error: "Cannot update slot..." });
   },
   async (req: Request, res: Response) => {
-    console.log('here');
     const slot = await SlotCollection.findOneById(req.query.id as string);
     const updatedSlot = await SlotCollection.updateOneById(
       slot._id,
@@ -90,7 +89,7 @@ router.patch(
     );
     res.status(200).json({
       message: "success",
-      slots: util.constructSlotItemResponse(updatedSlot),
+      slot: util.constructSlotItemResponse(updatedSlot),
     });
   }
 )

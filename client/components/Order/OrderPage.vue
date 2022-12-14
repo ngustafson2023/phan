@@ -89,7 +89,7 @@ export default {
             const fieldsMap = [
                 ['items', this.cart],
                 ['slotId', this.slotId],
-                ['foodBankId', this.$store.state.orderingFromId]
+                ['foodBankId', this.foodBank._id]
             ];
             options.body = JSON.stringify(Object.fromEntries(fieldsMap));
 
