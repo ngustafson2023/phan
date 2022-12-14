@@ -10,9 +10,10 @@
       <ul class="info">
         <!-- <li>Name: {{ $store.state.user.name }}</li> -->
         <li>Address: {{ $store.state.user.location }}</li>
-        <li>opensAt: {{ $store.state.user.opensAt || "N/A" }}</li>
-        <li>closesAt: {{ $store.state.user.closesAt || "N/A" }}</li>
-        <li>date joined: {{ $store.state.user.dateJoined }}</li>
+        <!-- {{$store.state.user.opensAt }} -->
+        <li>Hours: {{ $store.state.user.opensAt | formatTime}} to {{$store.state.user.closesAt | formatTime}}</li>
+        <!-- <li>closesAt: {{ $store.state.user.closesAt || "N/A" }}</li> -->
+        <li>Date Joined: {{ $store.state.user.dateJoined }}</li>
       </ul>
     </section>
     <h3> Current Slots:</h3>
@@ -66,6 +67,7 @@ import FoodItemComponent from "@/components/FoodItem/SingleFoodItem.vue";
 import ClickablePill from "@/components/common/ClickablePill.vue";
 import AddSlotPage from "@/components/FoodBank/AddSlotPage.vue";
 import SlotComponent from "@/components/FoodBank/SlotComponent.vue";
+import moment from 'moment'
 
 export default {
   name: "FoodBankHome",
@@ -104,7 +106,18 @@ export default {
       addingItem: false,
     };
   },
-
+  filters:{
+    formatDate:function(value) {
+      if (value) {
+        return moment(String(value)).format('MM/DD/YYYY')
+      }
+    },
+    formatTime:function(value) {
+      if (value) {
+        return moment(String(value)).format('hh:mm A')
+      }
+    },    
+  },
   methods: {
     async submit() {
       this.restrictions.sort();
@@ -160,7 +173,7 @@ export default {
 <style scoped>
 .pill-button-add {
 	padding: 10px 20px;
-	background-color: limegreen;
+	background-color: lightgreen;
 	border-radius: 20px;
 	margin: 0px 10px;
 	border-style: none;

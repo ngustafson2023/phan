@@ -23,7 +23,7 @@
             type="number"
           />
         </div>
-        <button @click="addSlots">Add Slots</button>
+        <button @click="addSlots">+ Add Slots</button>
       </div>
       <!-- <div class="filter-section">
 					<h4 class="no-padding">Dietary Restrictions:</h4>
@@ -133,6 +133,8 @@ button {
   border-style: none;
   font-family: inherit;
   font-size: 16px;
+  background-color: lightgreen;
+
 }
 
 button:hover {
