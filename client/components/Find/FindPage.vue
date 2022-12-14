@@ -19,7 +19,7 @@
 			<GmapMap
 				:center="center"
 				:zoom="14"
-				style="flex: 1; height: 700px; margin-right: 70px; border-radius: 15px"
+				style="flex: 1; height: 700px; margin-right: 70px; border-radius: 15px; overflow: hidden"
 				:options="{
 					zoomControl: false,
 					scaleControl: false,
@@ -174,7 +174,7 @@ section {
 }
 
 .container {
-	margin-top: 20px;
+	margin-top: 50px;
 }
 
 header,
@@ -222,5 +222,9 @@ section .scrollbox {
 	transform: translate(-50%, 10%);
 	width: 100%;
 	text-align: center;
+}
+
+.vue-map {
+	border-radius: 15px;
 }
 </style>
