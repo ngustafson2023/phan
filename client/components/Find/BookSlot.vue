@@ -32,7 +32,7 @@ export default {
 		book() {
 			// Nick add stuff here and redirect
 			// this.foodbank._id should have the id
-			this.$store.commit("setOrderingFromId", this.foodbank._id);
+			this.$store.commit("setOrderingFromId", this.foodbank._id.toString());
 			this.$router.push("/order");
 		},
 	},
