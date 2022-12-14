@@ -7,23 +7,11 @@
                     :foodBank="foodBank" :cart="cart" :slots="slots" :dates="dates"></Cart>
         </div>
 
-        <!-- <section>
-            <header>
-                <h2>Slots</h2>
-            </header>
-            <p v-if="slot">Currently selected: {{ formatDate(slot.startTime) }} to {{ formatDate(slot.endTime) }}</p>
-            <p v-else>Click on your desired slot below</p>
-            <article v-for="slotObj in slots">
-                <p @click="assignSlot(slotObj._id, slotObj)">{{ formatDate(slotObj.startTime) }} to {{ formatDate(slotObj.endTime) }}
-                </p>
-            </article>
-        </section> -->
-
-<!--         <section class="alerts">
+         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
                 <p>{{ alert }}</p>
             </article>
-        </section> -->
+        </section>
     </main>
 </template>
 
@@ -92,7 +80,7 @@ export default {
             this.$delete(this.cart, name);
         },
         async submit() {
-            //if (!this.slotId) return;
+            if (!this.slotId) return;
             const options = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -111,13 +99,22 @@ export default {
                     const res = await r.json();
                     throw new Error(res.error);
                 }
+                this.decrSlotQuantity(this.slotId);
                 this.$store.commit('setOrderingFromId', null);
                 this.$router.push('/')
-
             } catch (e) {
                 this.$set(this.alerts, e, 'error');
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
             }
+        },
+        async decrSlotQuantity(slotId) {
+            fetch(`/api/slot?id=${slotId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin' // Sends express-session credentials with request
+            }).then(res => res.json()).then(res => {
+                console.log(res);
+            })
         },
         incrNumSelected(name, quantity) {
             if (this.numSelected[name] < quantity) this.numSelected[name]++;
@@ -156,7 +153,6 @@ export default {
         },
         assignSlot(slotId) {
             this.slotId = slotId;
-            console.log(this.slotId);
         }
     }
 };
@@ -191,7 +187,7 @@ section .scrollbox {
     overflow-y: scroll;
 }
 
-/* .alerts {
+.alerts {
     position: absolute;
     z-index: 99;
     bottom: 0;
@@ -218,5 +214,5 @@ section .scrollbox {
 
 .alerts .success {
     background-color: rgb(45, 135, 87);
-} */
+}
 </style>
