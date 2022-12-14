@@ -28,7 +28,7 @@ router.get("/", async (req: Request, res: Response) => {
     req.query.id as string
   );
 
-  console.log("inventory",inventory);
+  // console.log("inventory",inventory);
   const response = inventory.map(util.constructFoodItemResponse);
   res.status(200).json(response);
 });
@@ -42,7 +42,7 @@ router.post(
   [foodItemValidator.isValidFoodItemModifier],
   async (req: Request, res: Response) => {
     const { foodBankId, name, quantity, restrictions } = req.body;
-    //console.log("body back", foodBankId, name, quantity, restrictions);
+    console.log("body back", foodBankId, name, quantity, restrictions);
     const foodItem = await FoodItemCollection.addOne(
       foodBankId,
       name,
