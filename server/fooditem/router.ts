@@ -13,72 +13,46 @@ const router = express.Router();
  * @name GET /api/fooditem?id=foodbank
  */
 router.get("/", async (req: Request, res: Response) => {
-  //const foodBank = await FoodBankCollection.findOneByUsername(req.query.name as string);
-  //const inventory = await FoodItemCollection.findAllByFoodBank(foodBank._id);
-  if (!req.query.id) {
-    const foodItems = await FoodItemCollection.findAll();
+	//const foodBank = await FoodBankCollection.findOneByUsername(req.query.name as string);
+	//const inventory = await FoodItemCollection.findAllByFoodBank(foodBank._id);
+	if (!req.query.id) {
+		const foodItems = await FoodItemCollection.findAll();
 
-    return res.status(200).json({
-      message: "got all foodbanks",
-      foodItems: foodItems.map(util.constructFoodItemResponse),
-    });
-  }
+		return res.status(200).json({
+			message: "got all food items",
+			foodItems: foodItems.map(util.constructFoodItemResponse),
+		});
+	}
 
-  const inventory = await FoodItemCollection.findAllByFoodBank(
-    req.query.id as string
-  );
+	const inventory = await FoodItemCollection.findAllByFoodBank(req.query.id as string);
 
-  // console.log("inventory",inventory);
-  const response = inventory.map(util.constructFoodItemResponse);
-  res.status(200).json(response);
+	// console.log("inventory",inventory);
+	const response = inventory.map(util.constructFoodItemResponse);
+	res.status(200).json(response);
 });
 
 /**
  * create a fooditem
  * @name POST /api/fooditem
  */
-router.post(
-  "/",
-  [foodItemValidator.isValidFoodItemModifier],
-  async (req: Request, res: Response) => {
-    const { foodBankId, name, quantity, restrictions } = req.body;
-    console.log("body back", foodBankId, name, quantity, restrictions);
-    const foodItem = await FoodItemCollection.addOne(
-      foodBankId,
-      name,
-      quantity,
-      restrictions
-    );
+router.post("/", [foodItemValidator.isValidFoodItemModifier], async (req: Request, res: Response) => {
+	const { foodBankId, name, quantity, restrictions } = req.body;
+	console.log("body back", foodBankId, name, quantity, restrictions);
+	const foodItem = await FoodItemCollection.addOne(foodBankId, name, quantity, restrictions);
 
-    const response = util.constructFoodItemResponse(foodItem as any);
-    res.status(200).json(response);
-  }
-);
+	const response = util.constructFoodItemResponse(foodItem as any);
+	res.status(200).json(response);
+});
 
 /**
  * Get a list of items in a foodbank's inventory
  * @name PATCH /api/fooditem
  */
-router.patch(
-  "/",
-  [foodItemValidator.isFoodItemExists],
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { foodItemId, name, restrictions, quantity } = req.body;
-    return await FoodItemCollection.updateOneById(
-      foodItemId,
-      name,
-      quantity,
-      restrictions
-    )
-      .then((foodItem) =>
-        res.status(200).json({ message: "updated foodItem", foodItem })
-      )
-      .catch((e) =>
-        res
-          .status(500)
-          .json({ error: "Could not update food item. Please try again later" })
-      );
-  }
-);
+router.patch("/", [foodItemValidator.isFoodItemExists], async (req: Request, res: Response, next: NextFunction) => {
+	const { foodItemId, name, restrictions, quantity } = req.body;
+	return await FoodItemCollection.updateOneById(foodItemId, name, quantity, restrictions)
+		.then((foodItem) => res.status(200).json({ message: "updated foodItem", foodItem }))
+		.catch((e) => res.status(500).json({ error: "Could not update food item. Please try again later" }));
+});
 
 export { router as foodItemRouter };
