@@ -2,8 +2,9 @@
     <main style="padding:20px;">
         <div class="row">
             <Inventory @add-to-cart="addToCart" @incr-num-selected="incrNumSelected" @decr-num-selected="decrNumSelected"
-                    :inventory="inventory" :numSelected="numSelected"></Inventory>
-            <Cart @remove-from-cart="removeFromCart" @submit="submit" :cart="cart"></Cart>
+                    :foodBank="foodBank" :inventory="inventory" :numSelected="numSelected"></Inventory>
+            <Cart @remove-from-cart="removeFromCart" @submit="submit" 
+                    :foodBank="foodBank" :cart="cart" :slots="slots" :dates="dates"></Cart>
         </div>
 
         <!-- <section>
@@ -35,11 +36,13 @@ export default {
     name: "OrderPage",
     components: { Inventory, Cart },
     mounted() {
+        this.getFoodBank();
         this.getInventory();
         this.getSlots();
     },
     data() {
         return {
+            foodBank: null,
             inventory: {},
             cart: {},
             numSelected: {},
@@ -47,6 +50,7 @@ export default {
             slotId: null,
             slot: null,
             slots: [],
+            dates: {},
 
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
@@ -57,6 +61,13 @@ export default {
         };
     },
     methods: {
+        async getFoodBank() {
+            fetch('/api/users?isFoodBank=true', {
+                credentials: 'same-origin'
+            }).then(res => res.json()).then(res => {
+                this.foodBank = res.foodBanks.filter(res => res._id === this.$store.state.orderingFromId)[0];
+            });
+        },
         async getInventory() {
             fetch(`/api/fooditem?id=${this.$store.state.orderingFromId}`, {
                 credentials: 'same-origin'
@@ -101,8 +112,6 @@ export default {
                     const res = await r.json();
                     throw new Error(res.error);
                 }
-
-                this.$store.commit('setOrderingFrom', null);
                 this.$store.commit('setOrderingFromId', null);
                 this.$router.push('/')
 
@@ -129,9 +138,9 @@ export default {
                     .then((res) => res.json())
                     .then((res) => {
                         for (const slotObj of res.slots) {
-                            this.slots.push(slotObj);
+                            if (slotObj.quantity !== 0) this.slots.push(slotObj);
                         } 
-                        console.log(this.slots);
+                        this.sortByDate();
                         this.$forceUpdate();
                     });
             } catch (e) {
@@ -139,26 +148,14 @@ export default {
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
             }
         },
-        /* async getSlots() {
-            const options = {
-                headers: { "Content-Type": "application/json" },
-                credentials: "same-origin", // Sends express-session credentials with request
-            };
-            try {
-                fetch(`/api/slot?id=${this.$store.state.orderingFromId}`, options)
-                    .then((res) => res.json())
-                    .then((res) => {
-                        for (const slotObj of res.slots) {
-                            this.slots.push(slotObj);
-                        } 
-                        this.$forceUpdate();
-                    });
-            } catch (e) {
-                this.$set(this.alerts, e, "error");
-                setTimeout(() => this.$delete(this.alerts, e), 3000);
+        sortByDate() {
+            for (const slotObj of this.slots) {
+                const date = new Date(slotObj.startTime);
+                if (!this.dates.hasOwnProperty(date.toDateString())) this.$set(this.dates, date.toDateString(), [slotObj]);
+                else this.dates[date.toDateString()].push(slotObj);
             }
-        },
-        assignSlot(slotId, slot) {
+        }
+        /* assignSlot(slotId, slot) {
             this.slotId = slotId;
             this.slot = slot;
         },

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h2 class="title">Ordering from {{ $store.state.orderingFrom }}</h2>
+        <h2 class="title">Ordering from {{ (foodBank) ? foodBank.username : '' }}</h2>
         <SearchBar @change="change"></SearchBar>
         <div class="tags">
             <Tag
@@ -34,6 +34,10 @@ export default {
     name: "Inventory",
     components: { SearchBar, Tag },
     props: {
+        foodBank: {
+            type: Object,
+            required: false
+        },
         inventory: {
             type: Object,
             required: true
