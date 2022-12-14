@@ -5,10 +5,12 @@
             <p class="item"><b>Pickup Location:</b> {{ (foodBank) ? foodBank.location : '' }}</p>
             <p class="item"><b>Pickup Time</b></p>
             <div v-for="(obj, date) in dates">
-                <p>{{ formatDate(date) }}</p>
-                <PickupTime v-for="slot in obj" 
-                :selected="slot._id === selectedSlot" :title="formatTime(slot.startTime)" :id="slot._id" :callback="assignSlot"/>
-            </div> 
+                <p class="date">{{ formatDate(date) }}</p>
+                <div class="times">
+                    <PickupTime v-for="slot in obj" 
+                        :selected="slot._id === selectedSlot" :title="formatTime(slot.startTime)" :id="slot._id" :callback="assignSlot"/>
+                </div> 
+            </div>    
             <button v-if="valid && selectedSlot" @click="submit" class="valid">Place Order</button>
             <button v-else class="invalid">Place Order</button>
         </div>
@@ -56,6 +58,16 @@ export default {
 </script>
 
 <style scoped>
+.date {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.times {
+    display: flex;
+    flex-direction: row;
+}
+
 .box {
     background-color: whitesmoke;
     padding: 10px;
