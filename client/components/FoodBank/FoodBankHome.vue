@@ -8,7 +8,7 @@
         <h2>Food Bank Account for @{{ $store.state.user.username }}</h2>
       </header>
       <ul class="info">
-        <li>Name: {{ $store.state.user.name }}</li>
+        <!-- <li>Name: {{ $store.state.user.name }}</li> -->
         <li>Address: {{ $store.state.user.location }}</li>
         <li>opensAt: {{ $store.state.user.opensAt || "N/A" }}</li>
         <li>closesAt: {{ $store.state.user.closesAt || "N/A" }}</li>
@@ -26,7 +26,11 @@
     </div>
     <div v-if="!inventory.length">no inventory</div>
 
-    <button v-on:click="addingItem = !addingItem">Add Inventory Item</button>
+    <button 
+      v-on:click="addingItem = !addingItem" 
+      v-bind:class="{'pill-button-add': !value }"
+    >
+      + Add Inventory Item</button>
 
     <form v-show="addingItem">
       <div>
@@ -104,7 +108,6 @@ export default {
   methods: {
     async submit() {
       this.restrictions.sort();
-
       // update food item
       const options = {
         method: "POST",
@@ -126,8 +129,8 @@ export default {
           const res = await r.json();
           throw new Error(res.error);
         }
-        //console.log(res);
-        this.inventory.push(res);
+        // console.log((await r.json()));
+        this.inventory.push(await r.json());
 
         // reset
         this.quantity = null;
@@ -154,3 +157,12 @@ export default {
   },
 };
 </script>
+<style scoped>
+.pill-button-add {
+	padding: 10px 20px;
+	background-color: limegreen;
+	border-radius: 20px;
+	margin: 0px 10px;
+	border-style: none;
+}
+</style>
