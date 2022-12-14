@@ -1,5 +1,5 @@
 <template>
-    <main style="padding:20px;">
+    <main style="padding:20px 90px;">
         <div class="row">
             <Inventory @add-to-cart="addToCart" @incr-num-selected="incrNumSelected" @decr-num-selected="decrNumSelected"
                     :foodBank="foodBank" :inventory="inventory" :numSelected="numSelected"></Inventory>
