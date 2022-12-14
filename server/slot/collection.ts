@@ -41,7 +41,7 @@ class SlotCollection {
 	 *
 	 * @return {Promise<HydratedDocument<Slot> | null> } - slot found
 	 */
-	static async findOneById(slotId: Types.ObjectId): Promise<HydratedDocument<Slot>> {
+	static async findOneById(slotId: Types.ObjectId | string): Promise<HydratedDocument<Slot>> {
 		const newSlot = SlotModel.findOne({
 			_id: slotId,
 		});
@@ -63,7 +63,7 @@ class SlotCollection {
 		startTime?: Date,
 		quantity?: Number
 	): Promise<HydratedDocument<Slot>> {
-		const slot = SlotModel.findOne({ _id: slotId }) as any;
+		const slot = await SlotModel.findOne({ _id: slotId });
 
 		if (startTime) {
 			slot.startTime = startTime;
@@ -72,8 +72,8 @@ class SlotCollection {
 		if (quantity) {
 			slot.quantity = quantity;
 		}
-
-    return await slot.save().populate("foodBankId");
+		await slot.save();
+		return slot.populate('foodBankId');
   }
 
 	/**

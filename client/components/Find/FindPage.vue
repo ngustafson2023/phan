@@ -13,18 +13,36 @@
 					<ClickablePill v-for="r in RESTRICTIONS" :title="r" :callback="editRestrictions" />
 				</div>
 			</div>
-		</section>
-		<section v-if="!foodbanks.length">None found</section> -->
+		</section> -->
+		<section v-if="!foodbanks.length">None found</section>
 		<div class="options">
-			<GoogleMap
-				:foodbanks="
-					foodbanks.map((fb) => {
-						return { ...fb, selected: fb === selected };
-					})
-				" />
+			<GmapMap
+				:center="center"
+				:zoom="14"
+				style="flex: 1; height: 700px; margin-right: 70px; border-radius: 15px"
+				:options="{
+					zoomControl: false,
+					scaleControl: false,
+					mapTypeControl: false,
+					fullscreenControl: false,
+					streetViewControl: false,
+					disableDefaultUi: false,
+				}">
+				<GmapMarker
+					:key="index"
+					v-for="(m, index) in markers"
+					:position="m.position"
+					:clickable="true"
+					@click="toggleInfo(m, index)" />
+			</GmapMap>
 			<section style="flex: 1">
 				<h3 class="no-padding">Food Banks</h3>
-				<BookSlot v-for="foodbank in foodbanks" :key="foodbank.name" :foodbank="foodbank" />
+				<BookSlot
+					v-for="(foodbank, index) in sortBanks([...foodbanks])"
+					:key="foodbank.name"
+					:foodbank="foodbank"
+					:distance="calculateDistance(foodbank.lat, foodbank.lng)"
+					:selected="selectedFoodbank !== null && 0 === index" />
 			</section>
 		</div>
 	</div>
@@ -33,14 +51,12 @@
 import BookSlot from "@/components/Find/BookSlot.vue";
 import ClickablePill from "@/components/common/ClickablePill.vue";
 import TextPill from "@/components/common/TextPill.vue";
-import GoogleMap from "@/components/Home/GoogleMap.vue";
 
 export default {
 	name: "FindPage",
-	components: { BookSlot, ClickablePill, TextPill, GoogleMap },
+	components: { BookSlot, ClickablePill, TextPill },
 	beforeCreate() {
 		// GET food banks
-		console.log("/api/users?isFoodBank=true");
 		fetch("/api/users?isFoodBank=true", {
 			credentials: "same-origin",
 			params: {
@@ -53,7 +69,9 @@ export default {
 				return await res.json();
 			})
 			.then((res) => {
+				console.log(res);
 				this.foodbanks = res.foodBanks;
+				this.addMarkers();
 			});
 
 		// get all food items
@@ -78,47 +96,72 @@ export default {
 			filteredFoodItems: [],
 			aterts: {},
 			selectedFoodbank: null,
-			STOCK_LEVELS: ["Low", "Medium", "High"],
-			RESTRICTIONS: ["Vegan", "Gluten Free", "Dairy Free"],
+			// STOCK_LEVELS: ["Low", "Medium", "High"],
+			// RESTRICTIONS: ["Vegan", "Gluten Free", "Dairy Free"],
+			center: { lat: 42.35026, lng: -71.08621 },
+			currentPlace: null,
+			markers: [],
 		};
 	},
 
+	mounted() {
+		this.geolocate();
+	},
+
 	methods: {
-		editStockLevels(item, shouldInclude) {
-			if (shouldInclude && !this.stocks.includes(item)) {
-				this.stocks.push(item);
-			} else if (!shouldInclude && this.stocks.includes(item)) {
-				this.stocks = this.stocks.filter((s) => s !== item);
-			}
-			this.updateSlots();
+		geolocate() {
+			navigator.geolocation.getCurrentPosition((position) => {
+				this.center = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude,
+				};
+			});
 		},
-		editRestrictions(item, shouldInclude) {
-			if (shouldInclude && !this.filters.includes(item)) {
-				this.filters.push(item);
-			} else if (!shouldInclude && this.filters.includes(item)) {
-				this.filters = this.filters.filter((s) => s !== item);
-			}
-			this.updateSlots();
+		addMarkers() {
+			this.foodbanks.map((fb) => {
+				this.markers.push({
+					position: {
+						lat: fb.lat,
+						lng: fb.lng,
+					},
+					name: fb.username,
+				});
+			});
 		},
 
-		updateViewed(name) {
-			this.selectedFoodbank = foodbanks.filter((fb) => rb.username === name)[0];
+		toggleInfo: function (marker, index) {
+			this.selectedFoodbank = index;
 		},
 
-		updateSlots() {
-			// fetch(
-			//   `/api/foodbanks?stockLevels=${this.stocks.join(
-			//     ","
-			//   )}&restrictions=${this.filters.join(",")}`,
-			//   {
-			//     credentials: "same-origin",
-			//   }
-			// )
-			//   .then((res) => res.json())
-			//   .then((res) => {
-			//     this.foodbanks = res.foodbanks;
-			//     console.log(res);
-			//   });
+		calculateDistance(lat2, lng2) {
+			// Convert the latitudes and longitudes from degrees to radians
+			let lat1 = this.center.lat * (Math.PI / 180);
+			let lng1 = this.center.lng * (Math.PI / 180);
+			lat2 = lat2 * (Math.PI / 180);
+			lng2 = lng2 * (Math.PI / 180);
+
+			// Use the Haversine formula to calculate the great-circle distance
+			const a =
+				Math.pow(Math.sin((lat2 - lat1) / 2), 2) +
+				Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lng2 - lng1) / 2), 2);
+			const distance = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+			// Convert the distance from radians to miles
+			return (distance * 3959).toFixed(2);
+		},
+
+		sortBanks(foodbanks) {
+			let selected = null;
+			if (this.selectedFoodbank !== null) {
+				selected = foodbanks[this.selectedFoodbank];
+				foodbanks.splice(this.selectedFoodbank, 1);
+			}
+			foodbanks.sort((a, b) => this.calculateDistance(a.lat, a.lng) - this.calculateDistance(b.lat, b.lng));
+
+			if (selected) {
+				foodbanks.unshift(selected);
+			}
+			return foodbanks;
 		},
 	},
 };
@@ -143,7 +186,6 @@ header > * {
 
 section .scrollbox {
 	flex: 1 0 50vh;
-	padding: 3%;
 	overflow-y: scroll;
 }
 
@@ -163,7 +205,7 @@ section .scrollbox {
 
 .no-padding {
 	padding: 0px;
-	margin: 15px 0px 3px 0px;
+	margin: 0px 0px 15px 0px;
 }
 
 .options {

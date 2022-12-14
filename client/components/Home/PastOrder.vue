@@ -3,7 +3,7 @@
 
 <template>
   <article class="order">
-    <h2 class="topItem">{{ order.slotId.foodBankId.name }}</h2>
+    <h2 class="topItem">{{ order.slotId.foodBankId.username }}</h2>
     <h5 class="item">Time: {{ this.startTime }}</h5>
     <h5 class="item">Location: {{ order.slotId.foodBankId.address }}</h5>
     <button>{{ "View Order" }}</button>
@@ -35,7 +35,7 @@ export default {
     // const end = new Date(this.order.slotId.endTime);
     this.startTime = `${start.getMonth() + 1}/${start.getDate() + 1}/${
       start.getFullYear() + 1
-    } at ${formatAMPM(end)}`;
+    } at ${formatAMPM(start)}`;
     // this.endTime = `${end.getMonth() + 1}/${end.getDate() + 1}/${
     //   end.getFullYear() + 1
     // } at ${formatAMPM(end)}`;

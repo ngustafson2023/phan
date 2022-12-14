@@ -13,7 +13,6 @@ const store = new Vuex.Store({
     user: {},
     // username: null, // Username of the logged in user
     // userId: null,
-    orderingFrom: null, // name of Food Bank user is currently ordering from
     orderingFromId: null,
     alerts: {}, // global success/error messages encountered during submissions to non-visible forms
     // isFoodBank: false, //user is by default not a food bank
@@ -37,13 +36,6 @@ const store = new Vuex.Store({
     //    */
     //   state.username = username;
     // },
-    setOrderingFrom(state, orderingFrom) {
-      /**
-       * Update the stored orderingFrom to the specified one.
-       * @param orderingFrom
-       */
-      state.orderingFrom = orderingFrom;
-    },
     setOrderingFromId(state, orderingFromId) {
       /**
        * Update the stored orderingFromId to the specified one.

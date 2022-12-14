@@ -20,7 +20,8 @@
                 <hr>
             </div>
         </div>
-        <OrderDetails @submit="submit" :valid="Object.keys(cart).length !== 0"></OrderDetails>
+        <OrderDetails @submit="submit" @assign-slot="assignSlot"
+        :foodBank="foodBank" :slots="slots" :dates="dates" :valid="Object.keys(cart).length !== 0"></OrderDetails>
     </div>
 </template>
 
@@ -31,6 +32,18 @@ export default {
     name: "Cart",
     components: { OrderDetails },
     props: {
+        foodBank: {
+            type: Object,
+            required: false
+        },
+        slots: {
+            type: Array,
+            required: false
+        },
+        dates: {
+            type: Object,
+            required: false
+        },
         cart: {
             type: Object,
             required: true
@@ -42,7 +55,10 @@ export default {
         },
         submit() {
             this.$emit('submit');
-        }
+        },
+        assignSlot(slotId) {
+            this.$emit('assign-slot', slotId);
+        },
     }
 }
 </script>
