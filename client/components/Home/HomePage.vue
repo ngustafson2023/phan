@@ -111,13 +111,14 @@ section .scrollbox {
 	overflow-y: scroll;
 }
 .pill-button {
+	margin: 10px auto 0px auto;
 	width: 46%;
-	margin: auto;
-	height: 35px;
+	padding: 10px 16px;
 	border-radius: 6px;
 	color: black;
-	background-color: darkgrey;
-	border: 2px solid black;
+	background-color: lightgreen;
+	border-style: none;
+	font-weight: bold;
 }
 
 .pill-button:hover {
