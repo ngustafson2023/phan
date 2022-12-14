@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h2 class="title">Ordering from {{ $store.state.orderingFrom }}</h2>
+        <h2 class="title">Ordering from {{ (foodBank) ? foodBank.username : '' }}</h2>
         <SearchBar @change="change"></SearchBar>
         <div class="tags">
             <Tag
@@ -34,31 +34,31 @@ export default {
     name: "Inventory",
     components: { SearchBar, Tag },
     props: {
+        foodBank: {
+            type: Object,
+            required: false
+        },
         inventory: {
+            type: Object,
+            required: true
+        },
+        numSelected: {
             type: Object,
             required: true
         }
     },
-    created() {
-        for (const [name, quantity] of Object.entries(this.inventory)) {
-            this.numSelected[name] = 0;
-        }
-    },
     data() {
         return {
-            numSelected: {},
             filter: '',
             tags: []
         }
     },
     methods: {
         incrNumSelected(name, quantity) {
-            if (this.numSelected[name] < quantity) this.numSelected[name]++;
-            this.$forceUpdate();
+            this.$emit('incr-num-selected', name, quantity);
         },
         decrNumSelected(name) {
-            if (this.numSelected[name] !== 0) this.numSelected[name]--;
-            this.$forceUpdate();
+            this.$emit('decr-num-selected', name);
         },
         addToCart(name) {
             const numSelected = this.numSelected[name];

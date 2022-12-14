@@ -1,27 +1,17 @@
 <template>
     <main style="padding:20px;">
         <div class="row">
-            <Inventory @add-to-cart="addToCart" :inventory="inventory"></Inventory>
-            <Cart @remove-from-cart="removeFromCart" @submit="submit" :cart="cart"></Cart>
+            <Inventory @add-to-cart="addToCart" @incr-num-selected="incrNumSelected" @decr-num-selected="decrNumSelected"
+                    :foodBank="foodBank" :inventory="inventory" :numSelected="numSelected"></Inventory>
+            <Cart @remove-from-cart="removeFromCart" @submit="submit" @assign-slot="assignSlot"
+                    :foodBank="foodBank" :cart="cart" :slots="slots" :dates="dates"></Cart>
         </div>
 
-        <!-- <section>
-            <header>
-                <h2>Slots</h2>
-            </header>
-            <p v-if="slot">Currently selected: {{ formatDate(slot.startTime) }} to {{ formatDate(slot.endTime) }}</p>
-            <p v-else>Click on your desired slot below</p>
-            <article v-for="slotObj in slots">
-                <p @click="assignSlot(slotObj._id, slotObj)">{{ formatDate(slotObj.startTime) }} to {{ formatDate(slotObj.endTime) }}
-                </p>
-            </article>
-        </section> -->
-
-<!--         <section class="alerts">
+         <section class="alerts">
             <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
                 <p>{{ alert }}</p>
             </article>
-        </section> -->
+        </section>
     </main>
 </template>
 
@@ -34,30 +24,21 @@ export default {
     name: "OrderPage",
     components: { Inventory, Cart },
     mounted() {
+        this.getFoodBank();
         this.getInventory();
-        //this.getSlots();
+        this.getSlots();
     },
     data() {
         return {
-            inventory: {
-                "bananas": {
-                    quantity: 25,
-                    restrictions: [
-                        "Dairy Free"
-                    ]
-                },
-                "apples": {
-                    quantity: 12,
-                    restrictions: [
-                        "Gluten Free",
-                        "Vegan"
-                    ]
-                }
-            },
+            foodBank: null,
+            inventory: {},
             cart: {},
-            /* slotId: null,
-            slot: null,
-            slots: [], */
+            numSelected: {},
+
+            slotId: null,
+            slots: [],
+            dates: {},
+
             alerts: {}, // Displays success/error messages encountered during form submission
             callback: () => {
                 const message = "Successfully placed order!";
@@ -67,15 +48,24 @@ export default {
         };
     },
     methods: {
+        async getFoodBank() {
+            fetch('/api/users?isFoodBank=true', {
+                credentials: 'same-origin'
+            }).then(res => res.json()).then(res => {
+                this.foodBank = res.foodBanks.filter(res => res._id === this.$store.state.orderingFromId)[0];
+            });
+        },
         async getInventory() {
             fetch(`/api/fooditem?id=${this.$store.state.orderingFromId}`, {
                 credentials: 'same-origin'
             }).then(res => res.json()).then(res => {
                 for (const foodItem of res) {
-                    this.inventory[foodItem.name] = {
+                    const obj = {
                         quantity: parseInt(foodItem.quantity),
                         restrictions: foodItem.restrictions
                     };
+                    this.$set(this.inventory, foodItem.name, obj);
+                    this.$set(this.numSelected, foodItem.name, 0);
                 }
                 this.$forceUpdate();
             });
@@ -90,7 +80,7 @@ export default {
             this.$delete(this.cart, name);
         },
         async submit() {
-            //if (!this.slotId) return;
+            if (!this.slotId) return;
             const options = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -99,7 +89,7 @@ export default {
             const fieldsMap = [
                 ['items', this.cart],
                 ['slotId', this.slotId],
-                ['foodBankId', this.$store.state.orderingFromId]
+                ['foodBankId', this.foodBank._id]
             ];
             options.body = JSON.stringify(Object.fromEntries(fieldsMap));
 
@@ -109,17 +99,32 @@ export default {
                     const res = await r.json();
                     throw new Error(res.error);
                 }
-
-                this.$store.commit('setOrderingFrom', null);
+                this.decrSlotQuantity(this.slotId);
                 this.$store.commit('setOrderingFromId', null);
                 this.$router.push('/')
-
             } catch (e) {
                 this.$set(this.alerts, e, 'error');
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
             }
         },
-        /* async getSlots() {
+        async decrSlotQuantity(slotId) {
+            fetch(`/api/slot?id=${slotId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin' // Sends express-session credentials with request
+            }).then(res => res.json()).then(res => {
+                console.log(res);
+            })
+        },
+        incrNumSelected(name, quantity) {
+            if (this.numSelected[name] < quantity) this.numSelected[name]++;
+            this.$forceUpdate();
+        },
+        decrNumSelected(name) {
+            if (this.numSelected[name] !== 0) this.numSelected[name]--;
+            this.$forceUpdate();
+        },
+        async getSlots() {
             const options = {
                 headers: { "Content-Type": "application/json" },
                 credentials: "same-origin", // Sends express-session credentials with request
@@ -129,8 +134,9 @@ export default {
                     .then((res) => res.json())
                     .then((res) => {
                         for (const slotObj of res.slots) {
-                            this.slots.push(slotObj);
+                            if (slotObj.quantity !== 0) this.slots.push(slotObj);
                         } 
+                        this.sortByDate();
                         this.$forceUpdate();
                     });
             } catch (e) {
@@ -138,24 +144,16 @@ export default {
                 setTimeout(() => this.$delete(this.alerts, e), 3000);
             }
         },
-        assignSlot(slotId, slot) {
+        sortByDate() {
+            for (const slotObj of this.slots) {
+                const date = new Date(slotObj.startTime);
+                if (!this.dates.hasOwnProperty(date.toDateString())) this.$set(this.dates, date.toDateString(), [slotObj]);
+                else this.dates[date.toDateString()].push(slotObj);
+            }
+        },
+        assignSlot(slotId) {
             this.slotId = slotId;
-            this.slot = slot;
-        },
-        formatDate(dateObj) {
-            const date = new Date(dateObj);
-            return `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear() + 1} at ${this.formatTime(date)}`;
-        },
-        formatTime(date) {
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? "PM" : "AM";
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            var strTime = hours + ":" + minutes + " " + ampm;
-            return strTime;
-        } */
+        }
     }
 };
 </script>
@@ -189,7 +187,7 @@ section .scrollbox {
     overflow-y: scroll;
 }
 
-/* .alerts {
+.alerts {
     position: absolute;
     z-index: 99;
     bottom: 0;
@@ -216,5 +214,5 @@ section .scrollbox {
 
 .alerts .success {
     background-color: rgb(45, 135, 87);
-} */
+}
 </style>

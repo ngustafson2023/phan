@@ -56,7 +56,7 @@ class OrderCollection {
 			.populate("userId slotId")
 			.populate({
 				path: "slotId",
-				populate: { path: "foodBankId", model: "FoodBank" },
+				populate: { path: "foodBankId", model: "User" },
 			});
 		return order;
 	}

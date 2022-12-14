@@ -68,4 +68,30 @@ router.get(
   }
 );
 
+// PATCH /api/slot?id=slotId
+
+router.patch(
+  '/',
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Check if slotId query parameter was supplied
+    if (req.query.id !== undefined) {
+      next();
+      return;
+    }
+    res.status(403).json({ error: "Cannot update slot..." });
+  },
+  async (req: Request, res: Response) => {
+    const slot = await SlotCollection.findOneById(req.query.id as string);
+    const updatedSlot = await SlotCollection.updateOneById(
+      slot._id,
+      slot.startTime,
+      (slot.quantity as number) - 1
+    );
+    res.status(200).json({
+      message: "success",
+      slot: util.constructSlotItemResponse(updatedSlot),
+    });
+  }
+)
+
 export { router as slotRouter };

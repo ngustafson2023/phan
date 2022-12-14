@@ -11,42 +11,46 @@
       </h5>
       <button v-on:click="showModal = !showModal">
         Update Stock Level
-        <Modal v-show="showModal" @close-modal="showModal = false" />
+        <!-- <Modal v-show="showModal" @close-modal="showModal = false" /> -->
       </button>
     </article>
+
     <article v-else>
       <header>
         <h2 class="itemName">{{ foodItem.name }}</h2>
+        <!-- {{foodItem.restrictions}} -->
       </header>
-      <div>
+      <!-- <div>
         <label class="itemLabel" name="name">name:</label>
         <span> {{ foodItem.name }}</span>
-      </div>
+      </div> -->
       <div>
         <label class="stockLabel" name="quantity">current stock:</label>
         <span> {{ foodItem.quantity }}</span>
       </div>
 
-      <h5>
+      <h5 v-if="foodItem.restrictions.length">
         tags:
-        <ClickablePill
-          v-for="tag in $store.state.tags"
+        <StaticPill
+          v-for="tag in foodItem.restrictions"
           :title="tag"
           :callback="toggleTag"
         />
       </h5>
-      <button type="submit" @click="updateFoodItem">update item</button>
+      <!-- <button type="submit" @click="updateFoodItem">update item</button> -->
     </article>
   </div>
 </template>
 
 <script>
 import ClickablePill from "@/components/common/ClickablePill.vue";
+import StaticPill from "@/components/common/StaticPill.vue";
+
 import Modal from "@/components/common/Modal.vue";
 
 export default {
   name: "FoodItemComponent",
-  components: { Modal, ClickablePill },
+  components: { Modal, ClickablePill, StaticPill},
   data() {
     return {
       updating: true,
@@ -102,7 +106,6 @@ export default {
       } else {
         tags.add(tag);
       }
-
       this.tagsToUpdate = [...tags];
       //console.log("tags updated to", this.tagsToUpdate);
     },
