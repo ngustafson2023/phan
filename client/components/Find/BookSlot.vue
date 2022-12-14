@@ -1,7 +1,8 @@
 <template>
-	<div class="bank">
+	<div class="bank" :class="{ selected: selected }">
 		<h4 class="text">{{ foodbank.username }}</h4>
 		<h5 class="text">Location: {{ foodbank.location }}</h5>
+		<h5 class="text">Distance: {{ distance }} mi</h5>
 		<button @click="book">{{ "Place Order" }}</button>
 	</div>
 </template>
@@ -13,6 +14,14 @@ export default {
 	props: {
 		foodbank: {
 			type: Object,
+			required: true,
+		},
+		selected: {
+			type: Boolean,
+			required: true,
+		},
+		distance: {
+			type: String,
 			required: true,
 		},
 	},
@@ -44,6 +53,12 @@ section {
 	padding: 20px;
 	margin-bottom: 20px;
 	border-radius: 20px;
+}
+
+.selected {
+	border-color: black;
+	border-width: 4px;
+	border-style: solid;
 }
 
 .text {
