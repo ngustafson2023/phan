@@ -1,45 +1,43 @@
 <template>
-  <article v-if="!updating">
-    <header>
-      <h2 class="topItem">{{ foodItem.name }}</h2>
-    </header>
-    <h5 class="item">Current Stock: {{ foodItem.quantity }}</h5>
-    <h5 class="item">
-      Item Tags:
-      <TextPill v-for="tag in foodItem.restrictions"> {{ tag }} </TextPill>
-    </h5>
-    <button v-on:click="showModal = !showModal">
-      Update Stock Level
-      <Modal v-show="showModal" @close-modal="showModal = false" />
-    </button>
-  </article>
-  <article v-else>
-    <header>
-      <h2 class="topItem">{{ foodItem.name }}</h2>
-    </header>
-    <div>
-      <label name="name">name</label>
-      <input v-model="foodItemName" :placeholder="foodItem.name" type="text" />
-    </div>
-    <div>
-      <label name="quantity"># in stock</label>
-      <input
-        v-model="quantity"
-        :placeholder="foodItem.quantity"
-        type="number"
-      />
-    </div>
+  <div class="container">
+    <article v-if="!updating">
+      <header>
+        <h2 class="topItem">{{ foodItem.name }}</h2>
+      </header>
+      <h5 class="item">Current Stock: {{ foodItem.quantity }}</h5>
+      <h5 class="item">
+        Item Tags:
+        <TextPill v-for="tag in foodItem.restrictions"> {{ tag }} </TextPill>
+      </h5>
+      <button v-on:click="showModal = !showModal">
+        Update Stock Level
+        <Modal v-show="showModal" @close-modal="showModal = false" />
+      </button>
+    </article>
+    <article v-else>
+      <header>
+        <h2 class="itemName">{{ foodItem.name }}</h2>
+      </header>
+      <div>
+        <label class="itemLabel" name="name">name:</label>
+        <span> {{ foodItem.name }}</span>
+      </div>
+      <div>
+        <label class="stockLabel" name="quantity">current stock:</label>
+        <span> {{ foodItem.quantity }}</span>
+      </div>
 
-    <h5>
-      tags:
-      <ClickablePill
-        v-for="tag in $store.state.tags"
-        :title="tag"
-        :callback="toggleTag"
-      />
-    </h5>
-    <button type="submit" @click="updateFoodItem">update item</button>
-  </article>
+      <h5>
+        tags:
+        <ClickablePill
+          v-for="tag in $store.state.tags"
+          :title="tag"
+          :callback="toggleTag"
+        />
+      </h5>
+      <button type="submit" @click="updateFoodItem">update item</button>
+    </article>
+  </div>
 </template>
 
 <script>
@@ -111,3 +109,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  background-color: grey;
+  padding: 16px;
+  margin: 24px 8px;
+  border-radius: 18px;
+}
+
+input {
+  border-radius: 6px;
+  background-color: grey;
+}
+</style>

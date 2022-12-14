@@ -28,17 +28,24 @@
       <FoodBankHome />
     </section>
     <section v-else>
-      <header>
-        <h2 v-bind:style="{textAlign:'center'}">Welcome to Phan!</h2>
-      </header>
-      <article>
-        <h3>
-          <!-- <b-router-link to="/login">go </b-router-link> -->
+      <!-- <b-router-link to="/login">go </b-router-link> -->
+      <div class="container">
+        <header class="welcome" id="welcome">
+          <h2>Welcome Back</h2>
+        </header>
+        <div class="loginContainer">
           <LoginForm />
-          <router-link to="/login" tag="button" v-bind:class="{ 'pill-button-active': value, 'pill-button': !value }"
-          > Create New Account </router-link>
-        </h3>
-      </article>
+        </div>
+        <router-link
+          to="/login"
+          tag="button"
+          v-bind:class="{
+            'pill-button': !value,
+          }"
+        >
+          Create New Account
+        </router-link>
+      </div>
     </section>
   </main>
 </template>
@@ -49,11 +56,17 @@ import PastOrderComponent from "./PastOrder.vue";
 import FindPage from "@/components/Find/FindPage.vue";
 import FoodItemComponent from "@/components/FoodItem/SingleFoodItem.vue";
 import FoodBankHome from "@/components/FoodBank/FoodBankHome.vue";
-import LoginForm from '@/components/Login/LoginForm.vue';
+import LoginForm from "@/components/Login/LoginForm.vue";
 
 export default {
   name: "HomePage",
-  components: { BookSlot, PastOrderComponent, FindPage, FoodBankHome,LoginForm },
+  components: {
+    BookSlot,
+    PastOrderComponent,
+    FindPage,
+    FoodBankHome,
+    LoginForm,
+  },
   beforeCreate() {
     // GET orders a user has placed
     if (this.$store.state.user.username && !this.$store.state.user.isFoodBank) {
@@ -76,17 +89,34 @@ export default {
 </script>
 
 <style scoped>
-
-section {
+section div {
   display: flex;
   flex-direction: column;
+}
+
+form {
+  width: 50%;
 }
 
 header,
 header > * {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
+}
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcome {
+  margin-top: 40px;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 section .scrollbox {
@@ -95,25 +125,16 @@ section .scrollbox {
   overflow-y: scroll;
 }
 .pill-button {
-	padding: 10px 20px;
-	background-color: darkgray;
-	border-radius: 20px;
-	margin: 0px 10px;
-	border-style: none;
-}
-
-.pill-button-active {
-	padding: 10px 20px;
-	background-color: darkgray;
-	border-radius: 20px;
-	margin: 0px 10px;
-	border-style: solid;
-	border-width: 3px;
-	border-color: black;
+  width: 46%;
+  margin: auto;
+  height: 35px;
+  border-radius: 6px;
+  color: black;
+  background-color: darkgrey;
+  border: 2px solid black;
 }
 
 .pill-button:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
-
 </style>

@@ -6,12 +6,16 @@
     <!-- <h3>{{ title }}</h3>  -->
     <article v-if="fields.length">
       <div v-for="field in fields" :key="field.id">
-        <label :for="field.id">{{ field.label }}:</label>
+        <label :id="'label' + field.id" :for="field.id" class="label"
+          >{{ field.label }}:</label
+        >
         <textarea
           v-if="field.id === 'content'"
           :name="field.id"
           :value="field.value"
           @input="field.value = $event.target.value"
+          :id="'textarea' + field.id"
+          class="textarea"
         />
         <input
           v-else
@@ -19,13 +23,18 @@
           :name="field.id"
           :value="field.value"
           @input="field.value = $event.target.value"
+          :id="'input' + field.id"
+          class="input"
         />
       </div>
     </article>
     <article v-else>
       <p>{{ content }}</p>
     </article>
-    <button type="submit" v-bind:class="{ 'pill-button-active': value, 'pill-button': !value }">
+    <button
+      type="submit"
+      v-bind:class="{ 'pill-button-active': value, 'pill-button': !value }"
+    >
       {{ title }}
     </button>
     <section class="alerts">
@@ -105,30 +114,10 @@ export default {
 </script>
 
 <style scoped>
-/*
 form {
-  border-style: none;
+  padding: 10px 20px;
   border-radius: 20px;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  position: relative;
-}*/
-form{
-  padding: 10px 20px;
-	border-radius: 20px;
-	margin: 0px 10px;
-	border-style: none;
-}
-
-textarea{
-  padding: 10px 20px;
-   background-color: darkgray; 
-	border-radius: 20px;
-	margin: 0px 10px;
-	border-style: none;
+  margin: auto;
 }
 article > div {
   display: flex;
@@ -149,28 +138,41 @@ form h3 {
 }
 
 textarea {
-  font-family: inherit;
-  font-size: inherit;
+  padding: 10px 20px;
+  background-color: lightgrey;
+  border-radius: 20px;
+  margin: 0px 10px;
+  border: 10px solid black;
 }
+
+input {
+  background-color: lightgrey;
+  border-radius: 6px;
+  margin: 4px 0px;
+}
+
+button {
+  width: 100%;
+  border-radius: 10px;
+  color: black;
+  background-color: darkgrey;
+  border: 2px solid black;
+}
+
+label {
+  font-size: small;
+}
+
 .pill-button {
-	padding: 10px 20px;
-	background-color: darkgray;
-	border-radius: 20px;
-	margin: 0px 10px;
-	border-style: none;
+  padding: 10px 20px;
 }
 
 .pill-button-active {
-	padding: 10px 20px;
-	background-color: darkgray;
-	border-radius: 20px;
-	margin: 0px 10px;
-	border-style: solid;
-	border-width: 3px;
-	border-color: black;
+  padding: 10px 20px;
+  border-width: 3px;
 }
 
 .pill-button:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 </style>

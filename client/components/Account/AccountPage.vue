@@ -36,3 +36,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+form {
+  margin: 0px;
+  padding: 0px;
+}
+
+main {
+  margin: 0px;
+}
+</style>
