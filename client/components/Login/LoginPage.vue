@@ -9,12 +9,6 @@
       </header>
       <RegisterForm />
     </section>
-    <!-- <section>
-      <header>
-        <h2>Have an account?</h2>
-      </header>
-      <LoginForm />
-    </section> -->
   </main>
 </template>
 

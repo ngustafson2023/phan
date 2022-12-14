@@ -19,6 +19,8 @@
 
 <script>
 import PickupTime from '@/components/Order/PickupTime.vue';
+import moment from 'moment'
+
 
 export default {
     name: 'OrderDetails',
@@ -34,19 +36,25 @@ export default {
             this.$emit('submit');
         },
         formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+            // const date = new Date(dateStr);
+            // return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+            if (dateStr) {
+                return moment(String(dateStr)).format('MM/DD/YYYY')
+            }
         },
         formatTime(dateStr) {
-            const date = new Date(dateStr);
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? "PM" : "AM";
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            var strTime = hours + ":" + minutes + " " + ampm;
-            return strTime;
+            // const date = new Date(dateStr);
+            // var hours = date.getHours();
+            // var minutes = date.getMinutes();
+            // var ampm = hours >= 12 ? "PM" : "AM";
+            // hours = hours % 12;
+            // hours = hours ? hours : 12; // the hour '0' should be '12'
+            // minutes = minutes < 10 ? "0" + minutes : minutes;
+            // var strTime = hours + ":" + minutes + " " + ampm;
+            // return strTime;
+            if (dateStr) {
+                return moment(String(dateStr)).format('hh:mm A')
+            }
         },
         assignSlot(slotId) {
             this.selectedSlot = slotId;
